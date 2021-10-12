@@ -1,57 +1,76 @@
-﻿using Domain.Exceptions;
+﻿using System;
+using System.Collections.Generic;
+using Domain.Exceptions;
 using Domain.Interfaces;
 
 namespace Domain.Models
 {
     public class Voetbaltruitje : IVoetbaltruitje
     {
-
-        public int Id { get; private set;} 
-
-        public Kledingmaat Kledingmaat { get; set;}
-
-        public string Seizoen { get; private set; }
-
-        public double Prijs {get; private set; }
-
-        public ClubSet ClubSet { get ; private set; }
-
+        internal Voetbaltruitje(int id, Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
+            : this(club, seizoen, prijs, kledingmaat, clubSet)
+        {
+            ZetId(id);
+        }
+        internal Voetbaltruitje(Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
+        {
+            ZetClub(club);
+            Seizoen = seizoen;
+            ZetPrijs(prijs);
+            Kledingmaat = kledingmaat;
+            ZetClubSet(clubSet);
+        }
+        public int Id { get; private set; }
         public Club Club { get; private set; }
-
-
-
+        public string Seizoen { get; private set; }
+        public double Prijs { get; private set; }
+        public Kledingmaat Kledingmaat { get; set; }
+        public ClubSet ClubSet { get; private set; }
+        //public Personalisatie Personalisatie { get; private set; }
         public void ZetId(int id)
         {
-            if (id <= 0) throw new TruitjeException("De id van een voetbaltruitje moet meer dan 0 zijn");
-            this.Id = id;
-
+            if (id <= 0) throw new VoetbaltruitjeException("Voetbaltruitje - invalid id");
+            Id = Id;
         }
-
         public void ZetPrijs(double prijs)
         {
-            if (prijs <= 1) throw new TruitjeException("De prijs van een voetbaltruitje moet meer dan 0 zijn");
-            if (prijs == this.Prijs) throw new TruitjeException("De nieuwe prijs kan niet dezelfde zijn als de huidige prijs");
+            if (prijs <= 0) throw new VoetbaltruitjeException("Voetbaltruitje - invalid prijs");
             this.Prijs = prijs;
         }
-
         public void ZetSeizoen(string seizoen)
         {
-            if (string.IsNullOrEmpty(seizoen.Trim())) throw new TruitjeException("Seizoen kan geen lege waarde bevatten");
-            if (seizoen == this.Seizoen) throw new TruitjeException("Het seizoen kan niet het zelfde zijn");
+            //TODO regels
             this.Seizoen = seizoen;
         }
-
-        public void ZetClubSet(ClubSet clubSet)
-        {
-            this.ClubSet = clubSet ?? throw new TruitjeException("Clubset kan niet null zijn");
-        }
-
         public void ZetClub(Club club)
         {
-            this.Club = club ?? throw new TruitjeException("Club kan niet null zijn");
+            if (club == null) throw new ClubException("ZetClub = null");
+            this.Club = club;
         }
-      
+        public void ZetClubSet(ClubSet clubSet)
+        {
+            if (clubSet == null) throw new VoetbaltruitjeException("ZetClubSet - null");
+            this.ClubSet = clubSet;
+        }
+        public override string ToString()
+        {
+            return $"{Id} - {Club.Ploeg} - {Seizoen} - {Prijs} - {Kledingmaat} - {ClubSet}";
+        }
 
-        
+        public override bool Equals(object obj)
+        {
+            return obj is Voetbaltruitje voetbaltruitje &&
+                   Id == voetbaltruitje.Id &&
+                   EqualityComparer<Club>.Default.Equals(Club, voetbaltruitje.Club) &&
+                   Seizoen == voetbaltruitje.Seizoen &&
+                   Prijs == voetbaltruitje.Prijs &&
+                   Kledingmaat == voetbaltruitje.Kledingmaat &&
+                   EqualityComparer<ClubSet>.Default.Equals(ClubSet, voetbaltruitje.ClubSet);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Club, Seizoen, Prijs, Kledingmaat, ClubSet);
+        }
     }
 }

@@ -1,32 +1,31 @@
-﻿using System.Collections.Generic;
-using Domain.Interfaces;
+﻿using System;
+using Domain.Exceptions;
 
 namespace Domain.Models
 {
-    public class Club
+    public class Club 
     {
-
-
-        public string Naam { get; private set; }
+        internal Club(string competitie, string ploeg)
+        {
+            if ((string.IsNullOrWhiteSpace(competitie)) || (string.IsNullOrWhiteSpace(ploeg)))
+                throw new ClubException("Club - null or empty");
+            Competitie = competitie;
+            Ploeg = Ploeg;
+        }
 
         public string Competitie { get; private set; }
+        public string Ploeg { get; private set; }
 
-        public List<Voetbaltruitje> Truitjes { get; } = new List<Voetbaltruitje>();
-        
-        public Club(string naam, string competitie)
+        public override bool Equals(object obj)
         {
-            Naam = naam;
-            Competitie = competitie;
+            return obj is Club club &&
+                   Competitie == club.Competitie &&
+                   Ploeg == club.Ploeg;
         }
 
-        public void ZetNaam(string naam)
+        public override int GetHashCode()
         {
-            Naam = naam;
-        }
-
-        public void ZetCompitie(string competitie)
-        {
-            Competitie = competitie;
+            return HashCode.Combine(Competitie, Ploeg);
         }
     }
 }

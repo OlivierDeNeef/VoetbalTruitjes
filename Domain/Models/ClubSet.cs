@@ -1,40 +1,33 @@
 ﻿using System;
 using Domain.Exceptions;
-using Domain.Interfaces;
 
 namespace Domain.Models
 {
     public class ClubSet
     {
+        public ClubSet(bool thuis, int versie)
+        {
+            Thuis = thuis;
+            if (versie < 0) throw new VoetbaltruitjeException("Clubset - versie < 1");
+            Versie = versie;
+        }
+
+        public bool Thuis { get; private set; }//vs uit
         public int Versie { get; private set; }
-        public bool IsUit { get; private set; }
 
-        public Voetbaltruitje Voetbaltruitje
+        public override bool Equals(object obj)
         {
-            get => Voetbaltruitje;
-            private set => Voetbaltruitje = value ?? throw new ClubSetException("Voetbaltruitje kan niet null zijn.");
+            return obj is ClubSet set &&
+                   Thuis == set.Thuis &&
+                   Versie == set.Versie;
         }
-
-        public ClubSet(int versie, bool isUit, Voetbaltruitje voetbaltruitje)
+        public override int GetHashCode()
         {
-            Versie = versie;
-            IsUit = isUit;
-            Voetbaltruitje = voetbaltruitje;
+            return HashCode.Combine(Thuis, Versie);
         }
-
-        public void SetVersie(int versie)
+        public override string ToString()
         {
-            Versie = versie;
-        }
-
-        public void SetIsUit(bool isUit)
-        {
-            IsUit = isUit;
-        }
-
-        public void SetTruitje(Voetbaltruitje voetbaltruitje)
-        {
-            Voetbaltruitje = voetbaltruitje;
+            return Thuis ? $"Thuis - {Versie}" : $"Uit - {Versie}";
         }
     }
 }
