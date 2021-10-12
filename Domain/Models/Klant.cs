@@ -1,52 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using Domain.Exceptions;
+using Domain.Interfaces;
 
 namespace Domain.Models
 {
-    public class Klant
+    public class Klant : IKlant
     {
-        public int Klantnummer { get; init; }
+        public string Adres { get; private set; }
+        public int KlantId { get; private set; }
+        public string Naam { get; private set; }
 
-        public string Naam
+        private readonly List<Bestelling> _bestellingen = new List<Bestelling>();
+
+        public void ZetAdres(string adres)
         {
-            get => Naam;
-            set
-            {
-                if (value.Trim().Length == 0)
-                {
-                    throw new KlantException( nameof(value) + " mag niet leeg zijn");
-                }
-
-                Naam = value;
-            }
+            if (string.IsNullOrWhiteSpace(adres)) throw new KlantException("Adres kan niet leeg zijn");
+            this.Adres = adres;
         }
 
-        public string Adres
+        public void ZetKlantId(int id)
         {
-            get => Adres;
-            set
-            {
-                if (value.Trim().Length < 5)
-                {
-                    throw new KlantException( nameof(value) + " moet minstens 5 karakters zijn");
-                }
-
-                Adres = value;
-            }
+            if (id < 0) throw new KlantException("Id kan niet negatief zijn");
+            this.KlantId = id;
         }
 
-        private readonly List<Besteling>  _bestellingen = new List<Besteling>();
-        
-
-        public Klant(string naam, string adres)
+        public void ZetNaam(string naam)
         {
-            Naam = naam;
-            Adres = adres;
-            
+            if (string.IsNullOrWhiteSpace(naam)) throw new KlantException("Klantnaam kan niet leef zijn");
+            this.Naam = naam;
         }
 
-        public int BerekenKorting()
+        public int Korting()
         {
             return _bestellingen.Count switch
             {
@@ -56,33 +41,36 @@ namespace Domain.Models
             };
         }
 
-        public void VoegbestellingToe(Besteling bestelling)
+        public IReadOnlyList<Bestelling> GetBestellingen()
+        {
+            return _bestellingen;
+        }
+        public bool HeeftBestelling(Bestelling bestelling)
+        {
+            if (bestelling == null) throw new KlantException("De bestelling die probeert te zoeken kan niet null zijn");
+            return _bestellingen.Contains(bestelling);
+        }
+
+        public void VoegToeBestelling(Bestelling bestelling)
         {
             if (bestelling == null) throw new KlantException("Een bestelling die null is kan niet worden toegevoegt");
-            if (_bestellingen.Contains(bestelling)) throw  new KlantException("De bestelling is al toegevoegt bij de klant");
+            if (_bestellingen.Contains(bestelling)) throw new KlantException("De bestelling is al toegevoegt bij de klant");
             if (bestelling.Klant._bestellingen.Contains(bestelling))
             {
                 bestelling.SetKlant(this);
                 return;
             }
-
             bestelling.SetKlant(this);
             _bestellingen.Add(bestelling);
-
         }
 
-        public void VerwijderdBestelling(Besteling bestelling)
+        public void VerwijderBestelling(Bestelling bestelling)
         {
             if (bestelling == null) throw new KlantException("De bestelling die je probeert te verwijder is null");
             if (!_bestellingen.Contains(bestelling)) throw new KlantException("De bestelling die probeert te verwijderen hoort niet tot bij de klant ");
             _bestellingen.Remove(bestelling);
             bestelling.SetKlant(null);
         }
-
-        public bool HeeftBestelling(Besteling besteling)
-        {
-            if (besteling == null) throw new KlantException("De besteling die probeert te zoeken kan niet null zijn");
-            return _bestellingen.Contains(besteling);
-        }
+        
     }
 }

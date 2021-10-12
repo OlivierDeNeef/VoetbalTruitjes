@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models
 {
-    public enum Maat
+    public enum Kledingmaat
     {
         S,
         M,

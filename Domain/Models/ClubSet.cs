@@ -1,5 +1,6 @@
 ﻿using System;
 using Domain.Exceptions;
+using Domain.Interfaces;
 
 namespace Domain.Models
 {
@@ -8,17 +9,17 @@ namespace Domain.Models
         public int Versie { get; private set; }
         public bool IsUit { get; private set; }
 
-        public Truitje Truitje
+        public Voetbaltruitje Voetbaltruitje
         {
-            get => Truitje;
-            private set => Truitje = value ?? throw new ClubSetException("Truitje kan niet null zijn.");
+            get => Voetbaltruitje;
+            private set => Voetbaltruitje = value ?? throw new ClubSetException("Voetbaltruitje kan niet null zijn.");
         }
 
-        public ClubSet(int versie, bool isUit, Truitje truitje)
+        public ClubSet(int versie, bool isUit, Voetbaltruitje voetbaltruitje)
         {
             Versie = versie;
             IsUit = isUit;
-            Truitje = truitje;
+            Voetbaltruitje = voetbaltruitje;
         }
 
         public void SetVersie(int versie)
@@ -31,9 +32,9 @@ namespace Domain.Models
             IsUit = isUit;
         }
 
-        public void SetTruitje(Truitje truitje)
+        public void SetTruitje(Voetbaltruitje voetbaltruitje)
         {
-            Truitje = truitje;
+            Voetbaltruitje = voetbaltruitje;
         }
     }
 }
