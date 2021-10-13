@@ -5,12 +5,11 @@ namespace Domain.Models
 {
     public class Club 
     {
-        internal Club(string competitie, string ploeg)
+        public Club(string competitie, string ploeg)
         {
-            if ((string.IsNullOrWhiteSpace(competitie)) || (string.IsNullOrWhiteSpace(ploeg)))
-                throw new ClubException("Club - null or empty");
+            if ((string.IsNullOrWhiteSpace(competitie)) || (string.IsNullOrWhiteSpace(ploeg))) throw new ClubException("Club - null or empty");
             Competitie = competitie;
-            Ploeg = Ploeg;
+            Ploeg = ploeg;
         }
 
         public string Competitie { get; private set; }

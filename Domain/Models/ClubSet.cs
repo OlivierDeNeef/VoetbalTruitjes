@@ -8,11 +8,11 @@ namespace Domain.Models
         public ClubSet(bool thuis, int versie)
         {
             Thuis = thuis;
-            if (versie < 0) throw new VoetbaltruitjeException("Clubset - versie < 1");
+            if (versie < 1) throw new ClubSetException("Clubset - versie < 1");
             Versie = versie;
         }
 
-        public bool Thuis { get; private set; }//vs uit
+        public bool Thuis { get; private set; }
         public int Versie { get; private set; }
 
         public override bool Equals(object obj)
