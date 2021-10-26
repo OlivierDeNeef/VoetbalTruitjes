@@ -10,7 +10,7 @@ namespace Domain.Models
             if ((string.IsNullOrWhiteSpace(competitie)) || (string.IsNullOrWhiteSpace(ploeg)))
                 throw new ClubException("Club - null or empty");
             Competitie = competitie;
-            Ploeg = Ploeg;
+            Ploeg = ploeg;
         }
 
         public string Competitie { get; private set; }

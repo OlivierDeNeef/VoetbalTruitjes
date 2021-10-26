@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Domain.Exceptions;
 using Domain.Interfaces;
 
@@ -12,7 +13,7 @@ namespace Domain.Models
         public double Prijs { get; private set; }
         public Klant Klant { get; private set; }
         public DateTime Tijdstip { get; private set; }
-        private Dictionary<Voetbaltruitje, int> _producten = new Dictionary<Voetbaltruitje, int>();
+        private readonly Dictionary<Voetbaltruitje, int> _producten = new Dictionary<Voetbaltruitje, int>();
 
         public Bestelling(int bestellingId, DateTime tijdstip) : this(tijdstip)
         {
@@ -24,8 +25,7 @@ namespace Domain.Models
         }
         public Bestelling(int bestellingId, Klant klant, DateTime tijdstip, Dictionary<Voetbaltruitje, int> producten) : this(bestellingId, klant, tijdstip)
         {
-            if (producten is null) throw new BestellingException("producten zijn leeg");
-            _producten = producten;
+            _producten = producten ?? throw new BestellingException("producten zijn leeg");
         }
         //constructor voor inlezen
         public Bestelling(int bestellingId, Klant klant, DateTime tijdstip, double prijs, bool betaald, Dictionary<Voetbaltruitje, int> producten) : this(bestellingId, klant, tijdstip, producten)
@@ -76,19 +76,11 @@ namespace Domain.Models
         }
         public double Kostprijs() //procent
         {
-            double prijs = 0.0;
-            int korting;
-            if (Klant is null)
+            var prijs = 0.0;
+            var korting = Klant?.Korting() ?? 0;
+            foreach (var (voetbaltruitje, aantal) in _producten)
             {
-                korting = 0;
-            }
-            else
-            {
-                korting = Klant.Korting();
-            }
-            foreach (KeyValuePair<Voetbaltruitje, int> kvp in _producten)
-            {
-                prijs += kvp.Key.Prijs * kvp.Value * (100.0 - korting);
+                prijs += voetbaltruitje.Prijs * aantal * (100.0 - korting);
             }
             return prijs;
         }
@@ -99,7 +91,7 @@ namespace Domain.Models
         public void ZetKlant(Klant newKlant)
         {
             if (newKlant == null) throw new BestellingException("Bestelling - invalid klant");
-            if (newKlant == Klant) throw new BestellingException("Bestelling - ZetKlant - not new");
+            if (newKlant.Equals(Klant)) throw new BestellingException("Bestelling - ZetKlant - not new");
             if (Klant != null)
                 if (Klant.HeeftBestelling(this))
                     Klant.VerwijderBestelling(this);
@@ -114,7 +106,6 @@ namespace Domain.Models
         }
         public void ZetTijdstip(DateTime tijdstip)
         {
-            if (tijdstip == null) throw new BestellingException("Bestelling - invalid tijdstip");
             Tijdstip = tijdstip;
         }
         public void ZetBetaald(bool betaald = true)
@@ -133,17 +124,13 @@ namespace Domain.Models
         public override string ToString()
         {
             string res = $"[Bestelling] {BestellingId},{Betaald},{Prijs},{Tijdstip},{Klant.KlantId},{Klant.Naam},{Klant.Adres},{_producten.Count}";
-            foreach (var p in _producten)
-            {
-                res += $"\n {p}";
-            }
-            return res;
+            return _producten.Aggregate(res, (current, p) => current + $"{Environment.NewLine} {p}");
         }
         public void Show()
         {
             Console.WriteLine(this);
-            foreach (KeyValuePair<Voetbaltruitje, int> kvp in _producten)
-                Console.WriteLine($"    product:{kvp.Key},{kvp.Value}");
+            foreach (var (voetbaltruitje, aantal) in _producten)
+                Console.WriteLine($"    product:{voetbaltruitje},{aantal}");
         }
         public override bool Equals(object obj)
         {
