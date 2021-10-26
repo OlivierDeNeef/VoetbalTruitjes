@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Domain.Exceptions;
 using Domain.Models;
 using Xunit;
@@ -8,11 +9,20 @@ namespace DomainTests.Models
 {
     public class KlantTests
     {
-        private Klant _klant;
+        private readonly List<Bestelling> _bestellingen;
+        private readonly Klant _klant;
         public KlantTests()
         {
+            _bestellingen = new List<Bestelling>()
+            {
+                new Bestelling(1, DateTime.Now),
+                new Bestelling(2, DateTime.Now),
+                new Bestelling(3, DateTime.Now),
+                new Bestelling(4, DateTime.Now),
+                new Bestelling(5, DateTime.Now),
 
-            _klant = new Klant("Olivier", "Dendermonde");
+            };
+            _klant = new Klant(1,"Olivier", "Dendermonde",_bestellingen);
         }
 
         [Fact()]
@@ -120,45 +130,135 @@ namespace DomainTests.Models
         }
 
         [Fact()]
-        public void GetBestellingenTest()
+        public void GetBestellingenTest_ReturnBestellingenVanKlant()
         {
-            throw new NotImplementedException();
+            Assert.Equal(_bestellingen, _klant.GetBestellingen());
         }
 
         [Fact()]
-        public void VerwijderBestellingTest()
+        public void VerwijderBestellingTest_BestellingInKlant_VerwijderdBestellingBijKlantEnVeranderdKlantBijBestelling()
         {
-            throw new NotImplementedException();
+            var bestelling = new Bestelling(8, DateTime.Now);
+            _klant.VoegToeBestelling(bestelling);
+            _klant.VerwijderBestelling(bestelling);
+
+            Assert.False(_klant.HeeftBestelling(bestelling));
+            Assert.Null(bestelling.Klant);
         }
 
         [Fact()]
-        public void VoegToeBestellingTest()
+        public void VerwijderBestellingTest_BestellingNietInKlant_ThrowsKlantException()
         {
-            throw new NotImplementedException();
+            var bestelling = new Bestelling(8, DateTime.Now);
+            
+            Assert.Throws<KlantException>(() => _klant.VerwijderBestelling(bestelling));
         }
 
         [Fact()]
-        public void HeeftBestellingTest()
+        public void VerwijderBestellingTest_BestellingIsNull_ThrowsKlantException()
         {
-            throw new NotImplementedException();
+            Assert.Throws<KlantException>(() => _klant.VerwijderBestelling(null));
         }
 
         [Fact()]
-        public void KortingTest()
+        public void VoegToeBestellingTest_BestellingNietInLijst_BestellingWordtToegevoegt()
         {
-            throw new NotImplementedException();
+            var bestelling = new Bestelling(8, DateTime.Now);
+            _klant.VoegToeBestelling(bestelling);
+
+            Assert.True(_klant.HeeftBestelling(bestelling));
+            Assert.Equal(_klant, bestelling.Klant);
         }
 
         [Fact()]
-        public void ToStringTest()
+        public void VoegToeBestellingTest_BestellingInLijst_ThrowsKlantException()
         {
-            throw new NotImplementedException();
+            var bestelling = new Bestelling(8, DateTime.Now);
+            _klant.VoegToeBestelling(bestelling);
+
+            Assert.Throws<KlantException>(() => _klant.VoegToeBestelling(bestelling));
         }
 
         [Fact()]
-        public void ToTextTest()
+        public void VoegToeBestellingTest_BestellingIsNull_ThrowsKlantException()
         {
-            throw new NotImplementedException();
+            Assert.Throws<KlantException>(() => _klant.VoegToeBestelling(null));
+        }
+
+        [Fact()]
+        public void HeeftBestellingTest_HeeftBestelling_ReturnsTrue()
+        {
+            var bestelling = new Bestelling(8, DateTime.Now);
+            _klant.VoegToeBestelling(bestelling);
+
+            Assert.True(_klant.HeeftBestelling(bestelling));
+        }
+
+        [Fact()]
+        public void HeeftBestellingTest_HeeftBestellingNiet_ReturnsFalse()
+        {
+            var bestelling = new Bestelling(8, DateTime.Now);
+
+            Assert.False(_klant.HeeftBestelling(bestelling));
+        }
+
+        [Fact()]
+        public void HeeftBestellingTest_BestellingIsNull_ThrowsKlantException()
+        {
+            Assert.Throws<KlantException>((() => _klant.HeeftBestelling(null)));
+        }
+
+        [Fact()]
+        public void KortingTest_KlantHeeft0Bestellingen_Returns0()
+        {
+            var klant = new Klant("Olivir","Dendermonde");
+
+            Assert.Equal(0, klant.Korting());
+        }
+
+        [Fact()]
+        public void KortingTest_KlantHeeft5Bestellingen_Returns10()
+        {
+            Assert.Equal(10, _klant.Korting());
+        }
+
+        [Fact()]
+        public void KortingTest_KlantHeeft10Bestellingen_Returns20()
+        {
+            _klant.VoegToeBestelling(new Bestelling(6, DateTime.Now));
+            _klant.VoegToeBestelling(new Bestelling(7, DateTime.Now));
+            _klant.VoegToeBestelling(new Bestelling(8, DateTime.Now));
+            _klant.VoegToeBestelling(new Bestelling(9, DateTime.Now));
+            _klant.VoegToeBestelling(new Bestelling(10, DateTime.Now));
+
+            Assert.Equal(20, _klant.Korting());
+        }
+
+        [Fact()]
+        public void ToStringTest_ReturnString()
+        {
+            var date = DateTime.Now;
+            var klant = new Klant(1,"Olivir", "Dendermonde", new List<Bestelling>(){new Bestelling(1,date)});
+
+            Assert.Equal($"[Klant] 1,Olivir,Dendermonde,1\r\n[Bestelling] 1,False,0,{date},1,Olivir,Dendermonde,0", klant.ToString());
+        }
+
+        [Fact()]
+        public void ToTextTest_UseDefaultTrue_ReturnsKorteVersie()
+        {
+            var date = DateTime.Now;
+            var klant = new Klant(1, "Olivir", "Dendermonde", new List<Bestelling>() { new Bestelling(1, date) });
+
+            Assert.Equal($"[Klant] 1,Olivir,Dendermonde,1", klant.ToText());
+        }
+
+        [Fact()]
+        public void ToTextTest_UseFalse_ReturnsLangeVersie()
+        {
+            var date = DateTime.Now;
+            var klant = new Klant(1, "Olivir", "Dendermonde", new List<Bestelling>() { new Bestelling(1, date) });
+
+            Assert.Equal($"[Klant] 1,Olivir,Dendermonde,1\r\n[Bestelling] 1,False,0,{date},1,Olivir,Dendermonde,0", klant.ToText(false));
         }
 
         [Fact()]

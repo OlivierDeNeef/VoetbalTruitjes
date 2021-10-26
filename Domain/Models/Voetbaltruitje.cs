@@ -7,7 +7,7 @@ namespace Domain.Models
 {
     public class Voetbaltruitje : IVoetbaltruitje
     {
-        internal Voetbaltruitje(int id, Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
+        public Voetbaltruitje(int id, Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
             : this(club, seizoen, prijs, kledingmaat, clubSet)
         {
             ZetId(id);
@@ -30,7 +30,7 @@ namespace Domain.Models
         public void ZetId(int id)
         {
             if (id <= 0) throw new VoetbaltruitjeException("Voetbaltruitje - invalid id");
-            Id = Id;
+            Id = id;
         }
         public void ZetPrijs(double prijs)
         {
@@ -39,12 +39,12 @@ namespace Domain.Models
         }
         public void ZetSeizoen(string seizoen)
         {
-            //TODO regels
+            //Ask regels
             this.Seizoen = seizoen;
         }
         public void ZetClub(Club club)
         {
-            if (club == null) throw new ClubException("ZetClub = null");
+            if (club == null) throw new VoetbaltruitjeException("ZetClub = null");
             this.Club = club;
         }
         public void ZetClubSet(ClubSet clubSet)
