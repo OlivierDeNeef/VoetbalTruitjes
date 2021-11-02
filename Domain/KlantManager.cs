@@ -34,12 +34,14 @@ namespace Domain
             {
                 if(id != 0) return _klantContext.GeefKlant(id);
                 if (!string.IsNullOrWhiteSpace(naam) && !string.IsNullOrWhiteSpace(adres)) _klantContext.GeefKlant(naam, adres);
-                if(!string.IsNullOrWhiteSpace(naam)) return _klantContext
+                if (!string.IsNullOrWhiteSpace(naam)) ;
             }
             catch (Exception e)
             {
                 throw new KlantManagerException("KlantManager - Fout bij opzoeken van de klant", e);
             }
+
+            return new Klant(1, "test", "sfsdgfsedr");
         }
 
         public void VoegToeKlant(Klant klant)

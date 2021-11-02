@@ -25,6 +25,7 @@ namespace DomainTests.Models
             _klant = new Klant(1,"Olivier", "Dendermonde",_bestellingen);
         }
 
+        
         [Fact()]
         public void KlantTest_NaamEnAdresIngeven_NaamEnAdresVeranderenInKlant()
         {
@@ -90,6 +91,7 @@ namespace DomainTests.Models
         [Fact()]
         public void ZetKlantIdTest_GeldigeId_KlantIdVeranderd()
         {
+            Assert.Equal(1,_klant.KlantId);
             _klant.ZetKlantId(50);
 
             Assert.Equal(50,_klant.KlantId);
@@ -104,6 +106,7 @@ namespace DomainTests.Models
         [Fact()]
         public void ZetNaamTest_GeldigeNaam_KlantNaamVeranderd()
         {
+            Assert.Equal("Olivier", _klant.Naam);
             _klant.ZetNaam("Tom");
 
             Assert.Equal("Tom", _klant.Naam);
@@ -118,6 +121,7 @@ namespace DomainTests.Models
         [Fact()]
         public void ZetAdresTest_GeldigeAdres_KlantAdresVeranderd()
         {
+            Assert.Equal("Dendermonde", _klant.Adres);
             _klant.ZetAdres("Buggenhout");
 
             Assert.Equal("Buggenhout", _klant.Adres);
@@ -140,6 +144,8 @@ namespace DomainTests.Models
         {
             var bestelling = new Bestelling(8, DateTime.Now);
             _klant.VoegToeBestelling(bestelling);
+            Assert.True(_klant.HeeftBestelling(bestelling));
+
             _klant.VerwijderBestelling(bestelling);
 
             Assert.False(_klant.HeeftBestelling(bestelling));
@@ -151,6 +157,7 @@ namespace DomainTests.Models
         {
             var bestelling = new Bestelling(8, DateTime.Now);
             
+            Assert.False(_klant.HeeftBestelling(bestelling));
             Assert.Throws<KlantException>(() => _klant.VerwijderBestelling(bestelling));
         }
 
@@ -164,6 +171,7 @@ namespace DomainTests.Models
         public void VoegToeBestellingTest_BestellingNietInLijst_BestellingWordtToegevoegt()
         {
             var bestelling = new Bestelling(8, DateTime.Now);
+            Assert.False(_klant.HeeftBestelling(bestelling));
             _klant.VoegToeBestelling(bestelling);
 
             Assert.True(_klant.HeeftBestelling(bestelling));
@@ -176,6 +184,7 @@ namespace DomainTests.Models
             var bestelling = new Bestelling(8, DateTime.Now);
             _klant.VoegToeBestelling(bestelling);
 
+            Assert.True(_klant.HeeftBestelling(bestelling));
             Assert.Throws<KlantException>(() => _klant.VoegToeBestelling(bestelling));
         }
 
@@ -211,14 +220,16 @@ namespace DomainTests.Models
         [Fact()]
         public void KortingTest_KlantHeeft0Bestellingen_Returns0()
         {
-            var klant = new Klant("Olivir","Dendermonde");
+            var klant = new Klant("Olivier","Dendermonde");
 
+            Assert.True(klant.GetBestellingen().Count <5);
             Assert.Equal(0, klant.Korting());
         }
 
         [Fact()]
         public void KortingTest_KlantHeeft5Bestellingen_Returns10()
         {
+            Assert.True(_klant.GetBestellingen().Count < 10);
             Assert.Equal(10, _klant.Korting());
         }
 
@@ -231,6 +242,7 @@ namespace DomainTests.Models
             _klant.VoegToeBestelling(new Bestelling(9, DateTime.Now));
             _klant.VoegToeBestelling(new Bestelling(10, DateTime.Now));
 
+            Assert.True(_klant.GetBestellingen().Count > 9);
             Assert.Equal(20, _klant.Korting());
         }
 
@@ -240,25 +252,25 @@ namespace DomainTests.Models
             var date = DateTime.Now;
             var klant = new Klant(1,"Olivir", "Dendermonde", new List<Bestelling>(){new Bestelling(1,date)});
 
-            Assert.Equal($"[Klant] 1,Olivir,Dendermonde,1\r\n[Bestelling] 1,False,0,{date},1,Olivir,Dendermonde,0", klant.ToString());
+            Assert.Equal($"[Klant] 1,Olivir,Dendermonde,1{Environment.NewLine}[Bestelling] 1,False,0,{date},1,Olivir,Dendermonde,0", klant.ToString());
         }
 
         [Fact()]
         public void ToTextTest_UseDefaultTrue_ReturnsKorteVersie()
         {
             var date = DateTime.Now;
-            var klant = new Klant(1, "Olivir", "Dendermonde", new List<Bestelling>() { new Bestelling(1, date) });
+            var klant = new Klant(1, "Olivier", "Dendermonde", new List<Bestelling>() { new Bestelling(1, date) });
 
-            Assert.Equal($"[Klant] 1,Olivir,Dendermonde,1", klant.ToText());
+            Assert.Equal($"[Klant] 1,Olivier,Dendermonde,1", klant.ToText());
         }
 
         [Fact()]
         public void ToTextTest_UseFalse_ReturnsLangeVersie()
         {
             var date = DateTime.Now;
-            var klant = new Klant(1, "Olivir", "Dendermonde", new List<Bestelling>() { new Bestelling(1, date) });
+            var klant = new Klant(1, "Olivier", "Dendermonde", new List<Bestelling>() { new Bestelling(1, date) });
 
-            Assert.Equal($"[Klant] 1,Olivir,Dendermonde,1\r\n[Bestelling] 1,False,0,{date},1,Olivir,Dendermonde,0", klant.ToText(false));
+            Assert.Equal($"[Klant] 1,Olivier,Dendermonde,1[Bestelling] 1,False,0,{date},1,Olivir,Dendermonde,0", klant.ToText(false));
         }
 
         [Fact()]

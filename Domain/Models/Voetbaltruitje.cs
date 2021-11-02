@@ -39,7 +39,7 @@ namespace Domain.Models
         }
         public void ZetSeizoen(string seizoen)
         {
-            //Ask regels
+           
             this.Seizoen = seizoen;
         }
         public void ZetClub(Club club)

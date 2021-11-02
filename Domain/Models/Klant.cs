@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Domain.Exceptions;
 using Domain.Interfaces;
 
@@ -96,11 +97,7 @@ namespace Domain.Models
         {
             if (kort) return $"[Klant] {KlantId},{Naam},{Adres},{_bestellingen.Count}";
             var res = $"[Klant] {KlantId},{Naam},{Adres},{_bestellingen.Count}";
-            foreach (var bestelling in _bestellingen)
-            {
-                res += $"{Environment.NewLine}{bestelling}";
-            }
-            return res;
+            return _bestellingen.Aggregate(res, (current, bestelling) => current + $"{Environment.NewLine}{bestelling}");
         }
         public void Show()
         {

@@ -36,7 +36,7 @@ namespace Domain.Models
         public Bestelling(DateTime tijdstip)
         {
             ZetTijdstip(tijdstip);
-            ZetBetaald(false);
+            
         }
 
         public void VoegProductToe(Voetbaltruitje voetbaltruitje, int aantal)
@@ -109,11 +109,7 @@ namespace Domain.Models
         public override string ToString()
         {
             var res = $"[Bestelling] {BestellingId},{Betaald},{Prijs},{Tijdstip},{Klant.KlantId},{Klant.Naam},{Klant.Adres},{_producten.Count}";
-            foreach (var p in _producten)
-            {
-                res += $"\n {p}";
-            }
-            return res;
+            return _producten.Aggregate(res, (current, p) => current + $"\n {p}");
         }
         public void Show()
         {
