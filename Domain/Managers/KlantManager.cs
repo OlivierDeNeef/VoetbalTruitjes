@@ -13,7 +13,7 @@ namespace Domain
 
         public KlantManager(IKlantContext klantContext)
         {
-            this._klantContext = klantContext;
+            _klantContext = klantContext;
         }
 
         public IEnumerable<Klant> GeefAlleKlanten()
@@ -28,13 +28,12 @@ namespace Domain
             }
         }
 
-        public Klant ZoekKlant([Optional]int id, [Optional] string naam, [Optional] string adres )
+        public Klant ZoekKlant(int id,  string naam,  string adres )
         {
             try
             {
                 if(id != 0) return _klantContext.GeefKlant(id);
-                if (!string.IsNullOrWhiteSpace(naam) && !string.IsNullOrWhiteSpace(adres)) _klantContext.GeefKlant(naam, adres);
-                if (!string.IsNullOrWhiteSpace(naam)) ;
+                
             }
             catch (Exception e)
             {

@@ -26,7 +26,7 @@ namespace WpfVoetbaltruitjes
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IKlantContext>();
+            //services.AddSingleton<IKlantContext>();
         }
     }
 }

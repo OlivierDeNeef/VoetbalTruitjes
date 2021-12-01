@@ -8,12 +8,18 @@ namespace Domain.Models
         public ClubSet(bool thuis, int versie)
         {
             Thuis = thuis;
-            if (versie < 1) throw new ClubSetException("Clubset - versie < 1");
+            ZetVersie(versie);
+        }
+
+        public bool Thuis { get; set; }
+        public int Versie { get; private set; }
+
+        public void ZetVersie(int versie)
+        {
+            if (versie < 1) throw new ClubSetException("ZetVersie - versie < 1");
             Versie = versie;
         }
 
-        public bool Thuis { get; private set; }
-        public int Versie { get; private set; }
 
         public override bool Equals(object obj)
         {

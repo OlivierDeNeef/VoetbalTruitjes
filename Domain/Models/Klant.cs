@@ -58,7 +58,7 @@ namespace Domain.Models
                 bestelling.VerwijderKlant();
             }
             
-            this._bestellingen.Remove(bestelling);
+            _bestellingen.Remove(bestelling);
 
         }
         public void VoegToeBestelling(Bestelling bestelling)
@@ -87,11 +87,7 @@ namespace Domain.Models
         {
            
             var res = $"[Klant] {KlantId},{Naam},{Adres},{_bestellingen.Count}";
-            foreach (var bestelling in _bestellingen)
-            {
-                res += $"{Environment.NewLine}{bestelling}";
-            }
-            return res;
+            return _bestellingen.Aggregate(res, (current, bestelling) => current + $"{Environment.NewLine}{bestelling}");
         }
         public string ToText(bool kort = true)
         {

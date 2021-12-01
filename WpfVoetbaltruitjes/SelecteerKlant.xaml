@@ -1,0 +1,45 @@
+﻿<Window x:Class="WpfVoetbaltruitjes.SelecteerKlant"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfVoetbaltruitjes"
+        mc:Ignorable="d"
+        Title="SelecteerKlant" Height="450" Width="800" MinWidth="600" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+
+        <Label Grid.Column="1" Grid.Row="1" Margin="0,0,10,20">Klant Id</Label>
+        <TextBox Grid.Column="2" Grid.Row="1" Margin="0,0,10,20"></TextBox>
+
+        <Label Grid.Column="1" Grid.Row="2" Margin="0,0,10,20">Naam</Label>
+        <TextBox Grid.Column="2" Grid.Row="2" Margin="0,0,10,20"></TextBox>
+
+        <Label Grid.Column="1" Grid.Row="3" Margin="0,0,10,20">Adres</Label>
+        <TextBox Grid.Column="2" Grid.Row="3" Margin="0,0,10,20"></TextBox>
+
+        <Button Grid.Column="3" Grid.Row="1" Grid.RowSpan="3" Width="100" Margin="0,0,0,20">Zoek</Button>
+
+        <ListBox  Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="3" Margin="0,0,0,20"></ListBox>
+
+        <Button Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="3" >Selcteer Klant</Button>
+
+    </Grid>
+</Window>

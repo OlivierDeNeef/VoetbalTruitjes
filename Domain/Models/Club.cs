@@ -3,17 +3,29 @@ using Domain.Exceptions;
 
 namespace Domain.Models
 {
-    public class Club 
+    public class Club
     {
         public Club(string competitie, string ploeg)
         {
-            if ((string.IsNullOrWhiteSpace(competitie)) || (string.IsNullOrWhiteSpace(ploeg))) throw new ClubException("Club - null or empty");
-            Competitie = competitie;
-            Ploeg = ploeg;
+           ZetCompetitie(competitie);
+           ZetPloeg(ploeg);
         }
 
         public string Competitie { get; private set; }
         public string Ploeg { get; private set; }
+
+        public void ZetCompetitie(string competitie)
+        {
+            if (string.IsNullOrWhiteSpace(competitie)) throw new ClubException("ZetCompetitie - competitie null or empty");
+            Competitie = competitie;
+        }
+
+        public void ZetPloeg(string ploeg)
+        {
+            if (string.IsNullOrWhiteSpace(ploeg)) throw new ClubException("ZetPloeg - ploeg null or empty");
+            Ploeg = ploeg;
+        }
+
 
         public override bool Equals(object obj)
         {

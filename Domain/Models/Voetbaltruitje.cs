@@ -15,7 +15,7 @@ namespace Domain.Models
         internal Voetbaltruitje(Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
         {
             ZetClub(club);
-            Seizoen = seizoen;
+            ZetSeizoen(seizoen);
             ZetPrijs(prijs);
             Kledingmaat = kledingmaat;
             ZetClubSet(clubSet);
@@ -26,7 +26,7 @@ namespace Domain.Models
         public double Prijs { get; private set; }
         public Kledingmaat Kledingmaat { get; set; }
         public ClubSet ClubSet { get; private set; }
-        //public Personalisatie Personalisatie { get; private set; }
+       
         public void ZetId(int id)
         {
             if (id <= 0) throw new VoetbaltruitjeException("Voetbaltruitje - invalid id");
@@ -35,22 +35,19 @@ namespace Domain.Models
         public void ZetPrijs(double prijs)
         {
             if (prijs <= 0) throw new VoetbaltruitjeException("Voetbaltruitje - invalid prijs");
-            this.Prijs = prijs;
+            Prijs = prijs;
         }
         public void ZetSeizoen(string seizoen)
         {
-           
-            this.Seizoen = seizoen;
+            Seizoen = seizoen;
         }
         public void ZetClub(Club club)
         {
-            if (club == null) throw new VoetbaltruitjeException("ZetClub = null");
-            this.Club = club;
+            Club = club ?? throw new VoetbaltruitjeException("ZetClub = null");
         }
         public void ZetClubSet(ClubSet clubSet)
         {
-            if (clubSet == null) throw new VoetbaltruitjeException("ZetClubSet - null");
-            this.ClubSet = clubSet;
+            ClubSet = clubSet ?? throw new VoetbaltruitjeException("ZetClubSet - null");
         }
         public override string ToString()
         {
