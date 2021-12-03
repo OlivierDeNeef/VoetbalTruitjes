@@ -285,10 +285,6 @@ namespace DomainTests.Models
             throw new NotImplementedException();
         }
 
-        [Fact()]
-        public void GetHashCodeTest()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

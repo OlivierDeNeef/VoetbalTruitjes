@@ -24,6 +24,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
 
@@ -50,17 +51,25 @@
             <CheckBox Margin="0,0,10,20">Uit</CheckBox>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="2" Grid.Row="4">
-            <Label  Margin="0,0,10,20">Versie</Label>
-            <TextBox Width="100" Margin="0,0,10,20"></TextBox>
+        <DockPanel  VerticalAlignment="Center" Grid.Column="2" Grid.Row="4" Margin="0,0,10,0">
+            <Label DockPanel.Dock="Left"  Margin="0,0,10,20">Versie</Label>
+            <TextBox DockPanel.Dock="Left" Width="100" Margin="0,0,10,20"></TextBox>
 
-            <Label  Margin="0,0,10,20">Club</Label>
-            <ComboBox Width="120" Margin="0,0,0,20"></ComboBox>
-        </StackPanel>
+            <Label DockPanel.Dock="Left"  Margin="0,0,10,20">Maat</Label>
+            <ComboBox DockPanel.Dock="Top"  Margin="0,0,0,20"></ComboBox>
+        </DockPanel>
 
         <ListBox  Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="4" Margin="0,0,0,20"></ListBox>
 
-        <Button Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" >Selcteer Klant</Button>
+        <Label Grid.Column="1" Grid.Row="6" >Aantal</Label>
+        <DockPanel  Grid.Column="2" Grid.Row="6" Margin="0,0,10,0">
+            <Button DockPanel.Dock="Right" Width="25">+</Button>
+            <Button DockPanel.Dock="Right" Width="25">-</Button>
+            <TextBox DockPanel.Dock="Top" ></TextBox>
+        </DockPanel>
+
+
+        <Button Grid.Column="4" Grid.Row="6" Grid.ColumnSpan="1" >Voeg Truitje(s) toe</Button>
 
     </Grid>
 </Window>

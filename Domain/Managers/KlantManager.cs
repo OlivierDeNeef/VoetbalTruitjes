@@ -16,17 +16,7 @@ namespace Domain
             _klantContext = klantContext;
         }
 
-        public IEnumerable<Klant> GeefAlleKlanten()
-        {
-            try
-            {
-               return _klantContext.GeefAlleKlanten();
-            }
-            catch (Exception e)
-            {
-                throw new KlantManagerException("KlantManager - Fout bij opzoeken van de klanten", e);
-            }
-        }
+        
 
         public Klant ZoekKlant(int id,  string naam,  string adres )
         {
