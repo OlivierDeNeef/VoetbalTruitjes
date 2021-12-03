@@ -11,7 +11,8 @@ namespace Domain.Models
         public int KlantId { get; private set; }
         public string Naam { get; private set; }
         public string Adres { get; private set; }
-        private readonly List<Bestelling> _bestellingen = new();
+
+        private  List<Bestelling> _bestellingen = new();
 
 
         public Klant(int klantId, string naam, string adres, List<Bestelling> bestellingen) : this(klantId, naam, adres)
@@ -61,6 +62,13 @@ namespace Domain.Models
             _bestellingen.Remove(bestelling);
 
         }
+
+        public void ZetBestelling(List<Bestelling> bestellingen)
+        {
+            if (bestellingen == null) throw new KlantException("Klant : ZetBestellingen - bestellingen is null");
+            _bestellingen = bestellingen;
+        }
+
         public void VoegToeBestelling(Bestelling bestelling)
         {
             if (bestelling == null) throw new KlantException("Klant : VoegToeBestelling - bestelling is null");

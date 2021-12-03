@@ -1,24 +1,136 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading;
+using System.Xml;
+using DataAccess.Exceptions;
+using Domain.Exceptions;
 using Domain.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccess.Repos
 {
     public class KlantRepo
     {
-        public  List<Klant> ZoekKlant(string naam, string adres)
+        private readonly string _connectionString;
+        public KlantRepo(IConfiguration configuration)
         {
-            throw new NotImplementedException();
+            _connectionString = configuration.GetConnectionString("defaultConnection");
         }
 
-        public Klant GeeftKlant(int id)
+        public List<Klant> ZoekKlanten(int id, string naam, string adres)
         {
-            throw new NotImplementedException();
+            using var con = new SqlConnection(_connectionString);
+            try
+            {
+                var cmd = new SqlCommand();
+                var query = "Select * from dbo.klant k left join bestelling b on k.Id = b.KlantId where ";
+
+                bool next = false;
+                if (id > 0 )
+                {
+                    query += "k.Id=@Id";
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    next = true;
+                }
+
+                if (!string.IsNullOrWhiteSpace(naam))
+                {
+                    if (next) query += " AND ";
+                    query += "k.Naam=@Naam";
+                    cmd.Parameters.AddWithValue("@Naam", naam);
+                    next = true;
+                }
+
+                if (!string.IsNullOrWhiteSpace(adres))
+                {
+                    if (next) query += " AND ";
+                    query += "k.Adres=@Adres";
+                    cmd.Parameters.AddWithValue("@Adres", adres);
+                }
+
+                cmd.Connection = con;
+                cmd.CommandText = query;
+                con.Open();
+                var reader = cmd.ExecuteReader();
+                if (!reader.HasRows) throw new KlantRepoException(nameof(ZoekKlanten) + " - Geen klanten gevonden");
+                var klanten = new List<Klant>();
+                Klant klant = null;
+                while (reader.Read())
+                {
+                    if (klanten.All(k=> k.KlantId != (int)reader[0]))
+                    {
+                        klant = new Klant((int) reader[0], (string) reader[1], (string) reader[2], new List<Bestelling>());
+
+                        klanten.Add(klant);
+
+                        if (reader[3] != DBNull.Value)
+                        {
+                            klant.VoegToeBestelling(new Bestelling((int)reader[3],klant,(DateTime)reader[4]));
+                        }
+                    }
+                    else
+                    {
+                        if (reader[3] != DBNull.Value)
+                        {
+                            klant?.VoegToeBestelling(new Bestelling((int)reader[3], klant, (DateTime)reader[4]));
+                        }
+                    }
+                }
+
+                return klanten;
+            }
+            catch (Exception e)
+            {
+                throw new KlantRepoException(nameof(ZoekKlanten) + " - Er ging iets mis", e);
+            }
         }
+
+      
 
         public bool BestaatKlant(int id)
         {
-            throw new NotImplementedException();
+            using var con = new SqlConnection(_connectionString);
+            try
+            {
+                con.Open();
+                var cmd = new SqlCommand("SELECT *  FROM dbo.Klant WHERE Id = @Id", con);
+                cmd.Parameters.AddWithValue("@Id", id);
+                var reader = cmd.ExecuteReader();
+                return reader.HasRows;
+            }
+            catch (Exception e)
+            {
+                throw new KlantRepoException(nameof(BestaatKlant) + " - Er ging iets mis", e);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public int VoegKlantToe(Klant klant)
+        {
+            var connection = new SqlConnection(_connectionString);
+            const string query = "INSERT INTO dbo.Klant (Name,Adres) OUTPUT INSERTED.Id values (@Name,@Adres)  ";
+            try
+            {
+                using var command = connection.CreateCommand();
+                connection.Open();
+                command.Parameters.AddWithValue("@Name", klant.Naam);
+                command.Parameters.AddWithValue("@Name", klant.Adres);
+                command.CommandText = query;
+                return (int)command.ExecuteScalar();
+            }
+            catch (Exception e)
+            {
+                throw new KlantRepoException(nameof(VoegKlantToe) + " - Er ging iets mis", e);
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
     }
 }

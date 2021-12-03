@@ -22,7 +22,7 @@ namespace Domain
         {
             try
             {
-                if(id != 0) return _klantContext.GeefKlant(id);
+                
                 
             }
             catch (Exception e)
