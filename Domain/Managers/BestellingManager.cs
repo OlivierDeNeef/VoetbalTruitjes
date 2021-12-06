@@ -1,4 +1,4 @@
-﻿namespace Domain
+﻿namespace Domain.Managers
 {
     public class BestellingManager
     {

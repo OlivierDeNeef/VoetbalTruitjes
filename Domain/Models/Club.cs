@@ -11,7 +11,8 @@ namespace Domain.Models
             Id = id;
         }
 
-        public Club(string competitie, string naam)
+        public Club(string competitie, string 
+            naam)
         {
            ZetCompetitie(competitie);
            ZetPloeg(naam);

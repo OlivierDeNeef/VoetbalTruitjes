@@ -5,14 +5,14 @@ using Domain.Interfaces;
 
 namespace Domain.Models
 {
-    public class Voetbaltruitje : IVoetbaltruitje
+    public class Voetbaltruitje 
     {
         public Voetbaltruitje(int id, Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
             : this(club, seizoen, prijs, kledingmaat, clubSet)
         {
             ZetId(id);
         }
-        internal Voetbaltruitje(Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
+        public Voetbaltruitje(Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
         {
             ZetClub(club);
             ZetSeizoen(seizoen);

@@ -50,6 +50,12 @@ namespace DataAccess.Repos
                     if (next) query += " AND ";
                     query += "k.Adres=@Adres";
                     cmd.Parameters.AddWithValue("@Adres", adres);
+                    next = true;
+                }
+
+                if (!next)
+                {
+                    throw new KlantRepoException(nameof(ZoekKlanten) + " - Er zijn geen parameters meegegeven");
                 }
 
                 cmd.Connection = con;

@@ -38,10 +38,13 @@ namespace WpfVoetbaltruitjes
         {
             services.AddSingleton<IConfiguration>(_configuration); 
             services.AddTransient<MainWindow>();
-            services.AddSingleton<KlantManager>();
             services.AddSingleton<IKlantRepo, KlantRepo>();
+            services.AddSingleton<KlantManager>();
             services.AddSingleton<IClubRepo, ClubRepo>();
             services.AddSingleton<ClubManager>();
+            services.AddSingleton<IVoetbaltruitjeRepo, VoetbaltruitjeRepo>();
+            services.AddSingleton<VoetbaltruitjeManager>();
+
 
         }
 

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Domain.Managers;
 
 namespace WpfVoetbaltruitjes
 {
@@ -19,8 +20,10 @@ namespace WpfVoetbaltruitjes
     /// </summary>
     public partial class SelecteerTruitje : Window
     {
-        public SelecteerTruitje()
+        private readonly VoetbaltruitjeManager _voetbaltruitjeManager;
+        public SelecteerTruitje(VoetbaltruitjeManager voetbaltruitjeManager)
         {
+            _voetbaltruitjeManager = voetbaltruitjeManager;
             InitializeComponent();
         }
     }

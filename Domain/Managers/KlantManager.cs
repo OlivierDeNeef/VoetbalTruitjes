@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 
-namespace Domain
+namespace Domain.Managers
 {
     public class KlantManager
     {
