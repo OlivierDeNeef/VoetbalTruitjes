@@ -51,7 +51,7 @@ namespace Domain.Models
         }
         public override string ToString()
         {
-            return $"{Id} - {Club.Ploeg} - {Seizoen} - {Prijs} - {Kledingmaat} - {ClubSet}";
+            return $"{Id} - {Club.Naam} - {Seizoen} - {Prijs} - {Kledingmaat} - {ClubSet}";
         }
 
         public override bool Equals(object obj)

@@ -9,38 +9,34 @@ namespace Domain
 {
     public class KlantManager
     {
-        private readonly IKlantContext _klantContext;
+        private readonly IKlantRepo _klantRepo;
 
-        public KlantManager(IKlantContext klantContext)
+        public KlantManager(IKlantRepo klantRepo)
         {
-            _klantContext = klantContext;
+            _klantRepo = klantRepo;
         }
 
         
 
-        public Klant ZoekKlant(int id,  string naam,  string adres )
+        public List<Klant> ZoekKlant(int id,  string naam,  string adres )
         {
             try
             {
-                
-                
+               return _klantRepo.ZoekKlanten(id, naam, adres);
             }
             catch (Exception e)
             {
                 throw new KlantManagerException("KlantManager - Fout bij opzoeken van de klant", e);
             }
 
-            return new Klant(1, "test", "sfsdgfsedr");
+          
         }
 
         public void VoegToeKlant(Klant klant)
         {
             try
             {
-                if (!_klantContext.BestaatKlant(klant.KlantId))
-                {
-                   _klantContext.VoegToeKlant(klant); 
-                }
+                _klantRepo.VoegKlantToe(klant);
             }
             catch (Exception e)
             {
@@ -53,9 +49,9 @@ namespace Domain
         {
             try
             {
-                if (_klantContext.BestaatKlant(klant.KlantId))
+                if (_klantRepo.BestaatKlant(klant.KlantId))
                 {
-                    _klantContext.VerwijderKlant(klant);
+                    _klantRepo.VerwijderKlant(klant);
                 }
             }
             catch (Exception e)
@@ -64,29 +60,32 @@ namespace Domain
             }
         }
 
-        public bool BestaatKlant(int id)
-        {
-            try
-            {
-                
-                return _klantContext.BestaatKlant(id);
-            }
-            catch (Exception e)
-            {
-                throw new KlantManagerException("KlantManager - Fout bij opzoeken van klant", e);
-            }
-        }
-
+        
         public void UpdateKlant(Klant klant)
         {
             try
             {
-                _klantContext.UpdateKlant(klant);
+                if (_klantRepo.BestaatKlant(klant.KlantId))
+                {
+                    _klantRepo.UpdateKlant(klant);
+                }
                
             }
             catch (Exception e)
             {
                 throw new KlantManagerException("KlantManager - Fout bij updaten van de klant", e);
+            }
+        }
+
+        public List<Klant> GeefAlleKlanten()
+        {
+            try
+            {
+                return _klantRepo.GeefAlleKlanten();
+            }
+            catch (Exception e)
+            {
+                throw new KlantManagerException("KlantManager - Fout bij opzoeken van de klant", e);
             }
         }
     }

@@ -1,23 +1,25 @@
 ﻿using System;
-using System.Drawing;
+using System.Runtime.Serialization;
 
 namespace DataAccess.Exceptions
 {
+   
     public class BestellingRepoException : Exception
     {
+       
+
         public BestellingRepoException()
         {
-            
         }
 
         public BestellingRepoException(string message) : base(message)
         {
-            
         }
 
-        public BestellingRepoException(string message , Exception innerException): base(message, innerException)
+        public BestellingRepoException(string message, Exception inner) : base(message, inner)
         {
-
         }
+
+        
     }
-}
+}   

@@ -72,7 +72,7 @@ namespace Domain.Models
         public void VoegToeBestelling(Bestelling bestelling)
         {
             if (bestelling == null) throw new KlantException("Klant : VoegToeBestelling - bestelling is null");
-            if (_bestellingen.Contains(bestelling)) throw new KlantException("Klant : AddBestelling - bestelling already exists");
+            if (HeeftBestelling(bestelling)) throw new KlantException("Klant : AddBestelling - bestelling already exists");
             _bestellingen.Add(bestelling);
             if (!Equals(bestelling.Klant, this)) bestelling.ZetKlant(this);
             
@@ -109,15 +109,32 @@ namespace Domain.Models
             foreach (var bestelling in _bestellingen) Console.WriteLine($"bestelling:{bestelling}"); 
         }
 
+        protected bool Equals(Klant other)
+        {
+            return KlantId == other.KlantId && Naam == other.Naam && Adres == other.Adres;
+        }
+
         public override bool Equals(object obj)
         {
-            return obj is Klant klant &&
-                   Naam == klant.Naam &&
-                   Adres == klant.Adres;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof(Klant)) return false;
+            return Equals((Klant) obj);
         }
+
         public override int GetHashCode()
         {
-            return HashCode.Combine(Naam, Adres);
+            return HashCode.Combine(KlantId, Naam, Adres);
+        }
+
+        public static bool operator ==(Klant left, Klant right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Klant left, Klant right)
+        {
+            return !Equals(left, right);
         }
     }
 }
