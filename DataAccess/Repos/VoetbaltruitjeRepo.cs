@@ -111,8 +111,8 @@ namespace DataAccess.Repos
                 {
                     if (voetbaltruitjes.All(v=> v.Id != (int)reader["Id"]))
                     {
-                        var voetbaltruitje = new Voetbaltruitje(
-                            new Club((string) reader["Competitie"], (string) reader["Naam"]),
+                        var voetbaltruitje = new Voetbaltruitje((int)reader["Id"],
+                            new Club((int)reader["ClubId"] ,(string)reader["Competitie"], (string) reader["Naam"]),
                             (string) reader["Seizoen"],
                             (double) reader["Prijs"],
                             (Kledingmaat) reader["Kledingmaat"],
@@ -251,8 +251,8 @@ namespace DataAccess.Repos
                 {
                     if (voetbaltruitjes.All(v => v.Id != (int)reader["Id"]))
                     {
-                        var voetbaltruitje = new Voetbaltruitje(
-                            new Club((string)reader["Competitie"], (string)reader["Naam"]),
+                        var voetbaltruitje = new Voetbaltruitje((int)reader["Id"],
+                            new Club((int)reader["ClubId"], (string)reader["Competitie"], (string)reader["Naam"]),
                             (string)reader["Seizoen"],
                             (double)reader["Prijs"],
                             (Kledingmaat)reader["Kledingmaat"],

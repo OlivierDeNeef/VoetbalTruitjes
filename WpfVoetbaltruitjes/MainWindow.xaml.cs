@@ -21,11 +21,12 @@ namespace WpfVoetbaltruitjes
         private readonly ClubManager _clubManager;
         private readonly VoetbaltruitjeManager _voetbaltruitjeManager;
 
+
         private List<Club> _alleClubs = new List<Club>();
-        
+        public Bestelling SelectedBestelling { get; set; }
         public Klant SelectedKlant { get; set; }
         public Club SelectedClub { get; set; }
-
+        public Dictionary<Voetbaltruitje, int> CurrentListVoetbaltruitjes = new Dictionary<Voetbaltruitje, int>();
         public Voetbaltruitje SelectedVoetbaltruitje { get; set; }
 
 
@@ -43,41 +44,56 @@ namespace WpfVoetbaltruitjes
 
         private void TabControlMain_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (TabControlMain.SelectedIndex == 2)
+            switch (TabControlMain.SelectedIndex)
             {
-                TextBoxKlantToevoegen.Text = "";
-                TextBoxAdresKlantToevoegen.Text = "";
-            }
-            else if (TabControlMain.SelectedIndex == 3)
-            {
-                TextBoxKlantIdAanpassen.Text = "";
-                TextBoxAdresAanpassenKlant.Text = "";
-                TextBoxNaamAanpassenKlant.Text = "";
-            }
-            else if (TabControlMain.SelectedIndex == 4)
-            {
-                TextBoxPrijsTruitjeToevoegen.Text = "";
-                TextBoxSeizoenTruitjeToevoegen.Text = "";
-                TextBoxVersieTruitjeToevoegen.Text = "";
-                RadioButtonUitTruitjeToevoegen.IsChecked = true;
-                RadioButtonUitTruitjeToevoegen.IsChecked = false;
-                ComboBoxClubTruitjeToevoegen.SelectedItem = null;
-                ComboBoxCompetitieTruitjeToevoegen.SelectedItem = null;
-                ComboBoxMaatTruitjeToevoegen.SelectedItem = null;
-                _alleClubs = _clubManager.GeefAlleClubs();
-                ComboBoxCompetitieTruitjeToevoegen.ItemsSource = _alleClubs.Select(c => c.Competitie).Distinct();
-                
-            }
-            else if (TabControlMain.SelectedIndex == 6)
-            {
-                TextBoxNaamClubToevoegen.Text = "";
-                TextBoxCompetitieClubToevoegen.Text = "";
-            }
-            else if (TabControlMain.SelectedIndex == 7)
-            {
-                TextBoxNaamAanpassenClub.Text = "";
-                TextBoxClubIdAanpassen.Text = "";
-                TextBoxCompetitieAanpassenClub.Text = "";
+                case 0:
+                    TextBoxKlantToevoegenBijbestelling.Text = "";
+                    TextBoxPrijsToevoegen.Text = "";
+                    CheckboxBetaaldToevoegen.IsChecked = false;
+                    CurrentListVoetbaltruitjes = new Dictionary<Voetbaltruitje, int>();
+                    BestellingToevoegenResult.ItemsSource = null;
+                    break;
+                case 1: 
+                    break;
+                case 2:
+                    TextBoxNaamKlantToevoegen.Text = "";
+                    TextBoxAdresKlantToevoegen.Text = "";
+                    break;
+                case 3:
+                    TextBoxKlantIdAanpassen.Text = "";
+                    TextBoxAdresAanpassenKlant.Text = "";
+                    TextBoxNaamAanpassenKlant.Text = "";
+                    break;
+                case 4:
+                    TextBoxPrijsTruitjeToevoegen.Text = "";
+                    TextBoxSeizoenTruitjeToevoegen.Text = "";
+                    TextBoxVersieTruitjeToevoegen.Text = "";
+                    RadioButtonUitTruitjeToevoegen.IsChecked = true;
+                    RadioButtonUitTruitjeToevoegen.IsChecked = false;
+                    ComboBoxClubTruitjeToevoegen.SelectedItem = null;
+                    ComboBoxCompetitieTruitjeToevoegen.SelectedItem = null;
+                    ComboBoxMaatTruitjeToevoegen.SelectedItem = null;
+                    _alleClubs = _clubManager.GeefAlleClubs();
+                    ComboBoxCompetitieTruitjeToevoegen.ItemsSource = _alleClubs.Select(c => c.Competitie).Distinct();
+                    break;
+                case 5:
+                    TextBoxIdTruitjeAanpassen.Text = "";
+                    TextBoxPrijsTruitjeAanpassen.Text = "";
+                    TextBoxSeizoenTruitjeAanpassen.Text = "";
+                    TextBoxVersieTruitjeAanpassen.Text = "";
+                    ComboBoxClubTruitjeAanpassen.SelectedItem = null;
+                    ComboBoxCompetitieTruitjeAanpassen.SelectedItem = null;
+                    ComboBoxMaatTruitjeAanpassen.SelectedItem = null;
+                    break;
+                case 6:
+                    TextBoxNaamClubToevoegen.Text = "";
+                    TextBoxCompetitieClubToevoegen.Text = "";
+                    break;
+                case 7:
+                    TextBoxNaamAanpassenClub.Text = "";
+                    TextBoxClubIdAanpassen.Text = "";
+                    TextBoxCompetitieAanpassenClub.Text = "";
+                    break;
             }
         }
 
@@ -86,15 +102,8 @@ namespace WpfVoetbaltruitjes
 
         #region TabBestellingToevoegen
 
-        private void SelecteerKlantButtonToevoegen_Click(object sender, RoutedEventArgs e)
-        {
+     
 
-        }
-
-        private void ButtonSelecteerTruitjeToevoegen_Click(object sender, RoutedEventArgs e)
-        {
-            new SelecteerTruitje(_voetbaltruitjeManager) { Owner = this }.ShowDialog();
-        }
 
         #endregion
 
@@ -137,12 +146,15 @@ namespace WpfVoetbaltruitjes
 
         #endregion
 
+        
         #region TabKlantAanpassen
 
         private void ButtonKlantSelecterenVoorKlantAanpassen_Click(object sender, RoutedEventArgs e)
         {
             SelectedKlant = null;
+
             new SelecteerKlant(_klantManager) { Owner = this }.ShowDialog();
+
             if (SelectedKlant != null)
             {
                 TextBoxKlantIdAanpassen.Text = SelectedKlant.KlantId.ToString();
@@ -292,7 +304,7 @@ namespace WpfVoetbaltruitjes
             if (!ClubAanpassenIsValid()) return;
             try
             {
-                var updateClub = new Club(SelectedClub.Id, TextBoxNaamAanpassenClub.Text, TextBoxCompetitieAanpassenClub.Text);
+                var updateClub = new Club(SelectedClub.Id, TextBoxCompetitieAanpassenClub.Text, TextBoxNaamAanpassenClub.Text);
                 if (updateClub != SelectedClub)
                 {
                     _clubManager.UpdateClub(updateClub);
@@ -449,18 +461,23 @@ namespace WpfVoetbaltruitjes
         private void ButtonSelecteerTruitjeAanpassen_Click(object sender, RoutedEventArgs e)
         {
             SelectedVoetbaltruitje = null;
-            new SelecteerTruitje(_voetbaltruitjeManager) {Owner = this}.ShowDialog();
+            new SelecteerTruitje(_voetbaltruitjeManager, _clubManager, false) {Owner = this}.ShowDialog();
             if (SelectedVoetbaltruitje != null)
             {
-                TextBoxIdTruitjeAanpassen.Text = SelectedVoetbaltruitje.Id.ToString();
-                ComboBoxClubTruitjeAanpassen.SelectedValue = SelectedVoetbaltruitje.Club.Naam;
+                ComboBoxCompetitieTruitjeAanpassen.ItemsSource = _clubManager.GeefAlleClubs().Select(c => c.Competitie).Distinct();
+                ComboBoxClubTruitjeAanpassen.ItemsSource = _clubManager.GeefAlleClubs()
+                    .Where(c => c.Competitie == SelectedVoetbaltruitje.Club.Competitie).Select(c => c.Naam);
+                ComboBoxMaatTruitjeAanpassen.ItemsSource = Enum.GetValues<Kledingmaat>();
+                TextBoxIdTruitjeAanpassen.Text = SelectedVoetbaltruitje.Id.ToString(); 
                 ComboBoxCompetitieTruitjeAanpassen.SelectedValue = SelectedVoetbaltruitje.Club.Competitie;
+                ComboBoxClubTruitjeAanpassen.SelectedValue = SelectedVoetbaltruitje.Club.Naam;
                 TextBoxSeizoenTruitjeAanpassen.Text = SelectedVoetbaltruitje.Seizoen;
                 TextBoxPrijsTruitjeAanpassen.Text = SelectedVoetbaltruitje.Prijs.ToString(CultureInfo.InvariantCulture);
                 TextBoxVersieTruitjeAanpassen.Text = SelectedVoetbaltruitje.ClubSet.Versie.ToString();
                 RadioButtonThuisTruitjeAanpassen.IsChecked = SelectedVoetbaltruitje.ClubSet.Thuis;
                 RadioButtonUitTruitjeAanpassen.IsChecked = !SelectedVoetbaltruitje.ClubSet.Thuis;
                 ComboBoxMaatTruitjeAanpassen.SelectedValue = SelectedVoetbaltruitje.Kledingmaat;
+                
 
             }
         }
@@ -472,7 +489,7 @@ namespace WpfVoetbaltruitjes
             if (cbx.SelectedItem != null)
             {
                 ComboBoxClubTruitjeAanpassen.ItemsSource =
-                    _alleClubs.Where(c => c.Competitie == cbx.SelectedItem.ToString()).Select(c => c.Naam);
+                    _clubManager.GeefAlleClubs().Where(c => c.Competitie == cbx.SelectedItem.ToString()).Select(c => c.Naam);
             }
             e.Handled = true;
         }
@@ -490,7 +507,15 @@ namespace WpfVoetbaltruitjes
                 if (MessageBox.Show("Bent u zeker dat u het truitje wilt verwijderen?", "Bevestigen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     _voetbaltruitjeManager.VerwijderVoetbaltruitje(SelectedVoetbaltruitje.Id);
-                    //TODO : empty fields
+                    TextBoxIdTruitjeAanpassen.Text = "";
+                    TextBoxPrijsTruitjeAanpassen.Text = "";
+                    TextBoxSeizoenTruitjeAanpassen.Text = "";
+                    TextBoxVersieTruitjeAanpassen.Text = "";
+                    RadioButtonUitTruitjeAanpassen.IsChecked = true;
+                    RadioButtonUitTruitjeAanpassen.IsChecked = false;
+                    ComboBoxClubTruitjeAanpassen.SelectedItem = null;
+                    ComboBoxCompetitieTruitjeAanpassen.SelectedItem = null;
+                    ComboBoxMaatTruitjeAanpassen.SelectedItem = null;
                 }
 
             }
@@ -506,7 +531,7 @@ namespace WpfVoetbaltruitjes
             try
             {
 
-                var club = _alleClubs.FirstOrDefault(c =>
+                var club = _clubManager.GeefAlleClubs().FirstOrDefault(c =>
                     c.Naam == ComboBoxClubTruitjeAanpassen.SelectedValue.ToString() &&
                     c.Competitie == ComboBoxCompetitieTruitjeAanpassen.SelectedValue.ToString());
 
@@ -515,10 +540,10 @@ namespace WpfVoetbaltruitjes
 
                 var maat = (Kledingmaat)Enum.Parse(typeof(Kledingmaat), ComboBoxMaatTruitjeAanpassen.SelectedValue.ToString(), true);
 
-                var updatedTruitje = new Voetbaltruitje(club, TextBoxSeizoenTruitjeAanpassen.Text,
+                var updatedTruitje = new Voetbaltruitje(SelectedVoetbaltruitje.Id, club, TextBoxSeizoenTruitjeAanpassen.Text,
                     double.Parse(TextBoxPrijsTruitjeAanpassen.Text), maat, clubset);
                 
-                if (updatedTruitje != SelectedVoetbaltruitje)
+                if (!updatedTruitje.Equals(SelectedVoetbaltruitje))
                 {
                     _voetbaltruitjeManager.UpdateVoetbaltruitje(updatedTruitje);
                     MessageBox.Show("Het truitje is aangepast", "bevestiging");
@@ -586,5 +611,55 @@ namespace WpfVoetbaltruitjes
         }
 
         #endregion
+
+        
+
+        private void SelecteerKlantButtonToevoegenAanbestelling_Click(object sender, RoutedEventArgs e)
+        {
+
+            SelectedKlant = null;
+            new SelecteerKlant(_klantManager) { Owner = this }.ShowDialog();
+            if (SelectedKlant != null)
+            {
+                TextBoxKlantToevoegenBijbestelling.Text = SelectedKlant.ToString();
+            }
+        }
+
+        private void ButtonTruitjeToevoegenBijBestelling_Click(object sender, RoutedEventArgs e)
+        {
+            new SelecteerTruitje(_voetbaltruitjeManager, _clubManager, true) {Owner = this}.ShowDialog();
+            BestellingToevoegenResult.ItemsSource = new Dictionary<Voetbaltruitje,int>(CurrentListVoetbaltruitjes);
+            BestellingToevoegenResult.Items.Refresh();
+            TextBoxPrijsToevoegen.Text = CurrentListVoetbaltruitjes.Sum(v => (v.Key.Prijs * v.Value)).ToString();
+        }
+
+        private void BestellingToevoegenResult_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+
+        private void ButtonRemoveTruitje_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (BestellingToevoegenResult.SelectedItem != null)
+            {
+                var truitje = (KeyValuePair<Voetbaltruitje,int>) BestellingToevoegenResult.SelectedItem;
+                CurrentListVoetbaltruitjes.Remove(truitje.Key);
+                BestellingToevoegenResult.ItemsSource = new Dictionary<Voetbaltruitje, int>(CurrentListVoetbaltruitjes);
+                BestellingToevoegenResult.Items.Refresh();
+                TextBoxPrijsToevoegen.Text = CurrentListVoetbaltruitjes.Sum(v => (v.Key.Prijs * v.Value)).ToString();
+            }
+        }
+
+        private void ButtonPlaatBestelling_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+
+        private void ButtonBestellingSelecterenAanpassen_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

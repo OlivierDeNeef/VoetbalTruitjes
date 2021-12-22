@@ -51,23 +51,35 @@ namespace Domain.Models
         }
         public override string ToString()
         {
-            return $"{Id} - {Club.Naam} - {Seizoen} - {Prijs} - {Kledingmaat} - {ClubSet}";
+            return $"[Id]:{Id} - [Club]: {Club.Naam} - [Seizoen]: {Seizoen} - [Versie]: {ClubSet.Versie} - [Thuis truitje]: {ClubSet.Thuis} - [Prijs/Stuk] {Prijs}";
+        }
+
+        protected bool Equals(Voetbaltruitje other)
+        {
+            return Id == other.Id && Club == other.Club && Seizoen == other.Seizoen && Prijs == other.Prijs && Kledingmaat == other.Kledingmaat && ClubSet == other.ClubSet;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is Voetbaltruitje voetbaltruitje &&
-                   Id == voetbaltruitje.Id &&
-                   EqualityComparer<Club>.Default.Equals(Club, voetbaltruitje.Club) &&
-                   Seizoen == voetbaltruitje.Seizoen &&
-                   Prijs == voetbaltruitje.Prijs &&
-                   Kledingmaat == voetbaltruitje.Kledingmaat &&
-                   EqualityComparer<ClubSet>.Default.Equals(ClubSet, voetbaltruitje.ClubSet);
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Voetbaltruitje) obj);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Club, Seizoen, Prijs, Kledingmaat, ClubSet);
+            return HashCode.Combine(Id, Club, Seizoen, Prijs, (int) Kledingmaat, ClubSet);
+        }
+
+        public static bool operator ==(Voetbaltruitje left, Voetbaltruitje right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Voetbaltruitje left, Voetbaltruitje right)
+        {
+            return !Equals(left, right);
         }
     }
 }

@@ -20,20 +20,37 @@ namespace Domain.Models
             Versie = versie;
         }
 
+        public override string ToString()
+        {
+            return Thuis ? $"Thuis - {Versie}" : $"Uit - {Versie}";
+        }
+
+        protected bool Equals(ClubSet other)
+        {
+            return Thuis == other.Thuis && Versie == other.Versie;
+        }
 
         public override bool Equals(object obj)
         {
-            return obj is ClubSet set &&
-                   Thuis == set.Thuis &&
-                   Versie == set.Versie;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ClubSet) obj);
         }
+
         public override int GetHashCode()
         {
             return HashCode.Combine(Thuis, Versie);
         }
-        public override string ToString()
+
+        public static bool operator ==(ClubSet left, ClubSet right)
         {
-            return Thuis ? $"Thuis - {Versie}" : $"Uit - {Versie}";
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ClubSet left, ClubSet right)
+        {
+            return !Equals(left, right);
         }
     }
 }

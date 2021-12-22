@@ -94,15 +94,10 @@ namespace Domain.Models
         public override string ToString()
         {
            
-            var res = $"[Klant] {KlantId},{Naam},{Adres},{_bestellingen.Count}";
-            return _bestellingen.Aggregate(res, (current, bestelling) => current + $"{Environment.NewLine}{bestelling}");
+            return $"[Id] {KlantId}, [Naam] {Naam}, [Adres] {Adres}, [Aantal bestellingen] {_bestellingen.Count}";
+            
         }
-        public string ToText(bool kort = true)
-        {
-            if (kort) return $"[Klant] {KlantId},{Naam},{Adres},{_bestellingen.Count}";
-            var res = $"[Klant] {KlantId},{Naam},{Adres},{_bestellingen.Count}";
-            return _bestellingen.Aggregate(res, (current, bestelling) => current + $"{Environment.NewLine}{bestelling}");
-        }
+        
         public void Show()
         {
             Console.WriteLine(this);

@@ -36,16 +36,32 @@ namespace Domain.Models
         }
 
 
+        protected bool Equals(Club other)
+        {
+            return Id == other.Id && Naam == other.Naam && Competitie == other.Competitie;
+        }
+
         public override bool Equals(object obj)
         {
-            return obj is Club club &&
-                   Competitie == club.Competitie &&
-                   Naam == club.Naam;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Club) obj);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Competitie, Naam);
+            return HashCode.Combine(Id, Naam, Competitie);
+        }
+
+        public static bool operator ==(Club left, Club right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Club left, Club right)
+        {
+            return !Equals(left, right);
         }
     }
 }
