@@ -28,20 +28,20 @@ namespace Domain
             }
         }
 
-        public Klant ZoekKlant([Optional]int id, [Optional] string naam, [Optional] string adres )
+        public IReadOnlyCollection<Klant> ZoekKlant([Optional]int id, [Optional] string naam, [Optional] string adres )
         {
             try
             {
-                if(id != 0) return _klantContext.GeefKlant(id);
-                if (!string.IsNullOrWhiteSpace(naam) && !string.IsNullOrWhiteSpace(adres)) _klantContext.GeefKlant(naam, adres);
-                if (!string.IsNullOrWhiteSpace(naam)) ;
+                if (id != 0) return new List<Klant>() {_klantContext.GeefKlant(id)};
+                if (!string.IsNullOrWhiteSpace(naam) && !string.IsNullOrWhiteSpace(adres)) return _klantContext.GeefKlantenOpNaamEnAdres(naam, adres);
+                if (!string.IsNullOrWhiteSpace(naam)) return _klantContext.GeefKlantenOpNaam(naam);
+                return !string.IsNullOrWhiteSpace(adres) ? _klantContext.GeefKlantenOpAdres(adres) : new List<Klant>();
             }
             catch (Exception e)
             {
                 throw new KlantManagerException("KlantManager - Fout bij opzoeken van de klant", e);
             }
 
-            return new Klant(1, "test", "sfsdgfsedr");
         }
 
         public void VoegToeKlant(Klant klant)

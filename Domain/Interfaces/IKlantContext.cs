@@ -12,5 +12,8 @@ namespace Domain.Interfaces
         void VoegToeKlant(Klant klant);
         void VerwijderKlant(Klant klant);
         void UpdateKlant(Klant klant);
+        IReadOnlyCollection<Klant> GeefKlantenOpNaamEnAdres(string naam, string adres);
+        IReadOnlyCollection<Klant> GeefKlantenOpNaam(string naam);
+        IReadOnlyCollection<Klant> GeefKlantenOpAdres(string adres);
     }
 }
