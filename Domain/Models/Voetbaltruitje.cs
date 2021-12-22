@@ -5,17 +5,17 @@ using Domain.Interfaces;
 
 namespace Domain.Models
 {
-    public class Voetbaltruitje : IVoetbaltruitje
+    public class Voetbaltruitje 
     {
         public Voetbaltruitje(int id, Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
             : this(club, seizoen, prijs, kledingmaat, clubSet)
         {
             ZetId(id);
         }
-        internal Voetbaltruitje(Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
+        public Voetbaltruitje(Club club, string seizoen, double prijs, Kledingmaat kledingmaat, ClubSet clubSet)
         {
             ZetClub(club);
-            Seizoen = seizoen;
+            ZetSeizoen(seizoen);
             ZetPrijs(prijs);
             Kledingmaat = kledingmaat;
             ZetClubSet(clubSet);
@@ -26,7 +26,7 @@ namespace Domain.Models
         public double Prijs { get; private set; }
         public Kledingmaat Kledingmaat { get; set; }
         public ClubSet ClubSet { get; private set; }
-        //public Personalisatie Personalisatie { get; private set; }
+       
         public void ZetId(int id)
         {
             if (id <= 0) throw new VoetbaltruitjeException("Voetbaltruitje - invalid id");
@@ -35,42 +35,51 @@ namespace Domain.Models
         public void ZetPrijs(double prijs)
         {
             if (prijs <= 0) throw new VoetbaltruitjeException("Voetbaltruitje - invalid prijs");
-            this.Prijs = prijs;
+            Prijs = prijs;
         }
         public void ZetSeizoen(string seizoen)
         {
-           
-            this.Seizoen = seizoen;
+            Seizoen = seizoen;
         }
         public void ZetClub(Club club)
         {
-            if (club == null) throw new VoetbaltruitjeException("ZetClub = null");
-            this.Club = club;
+            Club = club ?? throw new VoetbaltruitjeException("ZetClub = null");
         }
         public void ZetClubSet(ClubSet clubSet)
         {
-            if (clubSet == null) throw new VoetbaltruitjeException("ZetClubSet - null");
-            this.ClubSet = clubSet;
+            ClubSet = clubSet ?? throw new VoetbaltruitjeException("ZetClubSet - null");
         }
         public override string ToString()
         {
-            return $"{Id} - {Club.Ploeg} - {Seizoen} - {Prijs} - {Kledingmaat} - {ClubSet}";
+            return $"[Id]:{Id} - [Club]: {Club.Naam} - [Seizoen]: {Seizoen} - [Versie]: {ClubSet.Versie} - [Thuis truitje]: {ClubSet.Thuis} - [Prijs/Stuk] {Prijs}";
+        }
+
+        protected bool Equals(Voetbaltruitje other)
+        {
+            return Id == other.Id && Club == other.Club && Seizoen == other.Seizoen && Prijs == other.Prijs && Kledingmaat == other.Kledingmaat && ClubSet == other.ClubSet;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is Voetbaltruitje voetbaltruitje &&
-                   Id == voetbaltruitje.Id &&
-                   EqualityComparer<Club>.Default.Equals(Club, voetbaltruitje.Club) &&
-                   Seizoen == voetbaltruitje.Seizoen &&
-                   Prijs == voetbaltruitje.Prijs &&
-                   Kledingmaat == voetbaltruitje.Kledingmaat &&
-                   EqualityComparer<ClubSet>.Default.Equals(ClubSet, voetbaltruitje.ClubSet);
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Voetbaltruitje) obj);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Club, Seizoen, Prijs, Kledingmaat, ClubSet);
+            return HashCode.Combine(Id, Club, Seizoen, Prijs, (int) Kledingmaat, ClubSet);
+        }
+
+        public static bool operator ==(Voetbaltruitje left, Voetbaltruitje right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Voetbaltruitje left, Voetbaltruitje right)
+        {
+            return !Equals(left, right);
         }
     }
 }

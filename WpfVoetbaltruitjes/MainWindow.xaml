@@ -5,21 +5,534 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfVoetbaltruitjes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="20"/>
-        </Grid.ColumnDefinitions>
+        Title="Voetbaltruitjes bestelling manager" Height="450" Width="1200" MinWidth="900">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
-        </Grid.RowDefinitions>
+    <TabControl Name="TabControlMain" SelectionChanged="TabControlMain_SelectionChanged" >
+        <TabItem Header="Bestelling toevoegen" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20px" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20px" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20px" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="25px" />
+                    <RowDefinition Height="20px" />
+                </Grid.RowDefinitions>
+<!--1ste rij-->
+                <Label Grid.Column="1" Grid.Row="1" Margin="0,0,20,20">Klant</Label>
+                <TextBox Name="TextBoxKlantToevoegenBijbestelling" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" IsEnabled="False" Margin="0,0,20,20"></TextBox>
+                <Button Name="SelecteerKlantButtonToevoegenAanbestelling" Grid.Column="4" Grid.Row="1" Margin="0,0,0,20" Click="SelecteerKlantButtonToevoegenAanbestelling_Click">Selecteer Klant</Button>
+<!--2de rij-->
+                <Label Grid.Column="1" Grid.Row="2" Margin="0,0,20,20">Prijs</Label>
+                <TextBox Name="TextBoxPrijsToevoegen" Grid.Column="2" IsEnabled="False" Grid.Row="2" Margin="0,0,20,20"></TextBox>
+                <CheckBox Name="CheckboxBetaaldToevoegen" Grid.Column="3" VerticalAlignment="Center" Grid.Row="2" Margin="0,0,20,20">Betaald</CheckBox>
+                <Button Name="ButtonTruitjeToevoegenBijBestelling" Grid.Column="4" Grid.Row="2" Width="120" Margin="0,0,0,20" Click="ButtonTruitjeToevoegenBijBestelling_Click">Truitje Toevoegen</Button>
+<!--3de rij-->
+                <DataGrid AutoGenerateColumns="False" Name="BestellingToevoegenResult" Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="3" Margin="0,0,0,10" SelectionChanged="BestellingToevoegenResult_SelectionChanged">
+                   <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id"  Binding="{Binding Key.Id}"/>
+                        <DataGridTextColumn Header="Club" Width="*" Binding="{Binding Key.Club.Naam}"/>
+                        <DataGridTextColumn Header="Seizoen" Width="*" Binding="{Binding Key.Seizoen}"/>
+                        <DataGridTextColumn Header="Versie" Width="*" Binding="{Binding Key.ClubSet.Versie}"/>
+                        <DataGridCheckBoxColumn Header="Thuis truitje" Binding="{Binding Key.ClubSet.Thuis}"/>
+                        <DataGridTextColumn Header="Prijs/stuk" Binding="{Binding Key.Prijs}"/>
+                        <DataGridTextColumn Header="Aantal" Binding="{Binding Value}"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="ButtonRemoveTruitje" Click="ButtonRemoveTruitje_OnClick" >Remove</Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                   </DataGrid.Columns>
+                </DataGrid>
 
-    </Grid>
+<!--4de rij-->
+                <Button Name="ButtonPlaatBestelling" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" Click="ButtonPlaatBestelling_Click" >Plaats bestelling</Button>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Bestelling aanpassen">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20px" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20px" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20px" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="25px" />
+                    <RowDefinition Height="20px" />
+                </Grid.RowDefinitions>
+
+
+                <Label Grid.Column="1" Grid.Row="1" IsEnabled="False" Margin="0,0,20,20">Bestelling Id</Label>
+                <TextBox Name="TextBoxBestellingIdAanpassen"  Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" IsEnabled="False" Margin="0,0,20,20"></TextBox>
+                <Button Name="ButtonBestellingSelecterenAanpassen"  Grid.Column="4" Grid.Row="1" Margin="0,0,0,20" Click="ButtonBestellingSelecterenAanpassen_Click">Bestelling selecteren</Button>
+                <!--2de rij-->
+                <Label Grid.Column="1" Grid.Row="2" IsEnabled="False" Margin="0,0,20,20">Klant</Label>
+                <TextBox Name="TextBoxKlantAanpassenBijbestelling"  Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2" IsEnabled="False" Margin="0,0,20,20"></TextBox>
+                <Button Name="ButtonKlantAanpassenBijbestelling" IsEnabled="False" Grid.Column="4" Grid.Row="2" Margin="0,0,0,20" Click="SelecteerKlantButtonToevoegenAanbestelling_Click">Klant aanpassen</Button>
+                <!--3de rij-->
+                <Label Grid.Column="1" Grid.Row="3" IsEnabled="False" Margin="0,0,20,20">Prijs</Label>
+                <TextBox Name="TextBoxPrijsAanpassen" Grid.Column="2" IsEnabled="False" Grid.Row="3" Margin="0,0,20,20"></TextBox>
+                <CheckBox Name="CheckboxBetaaldAanpassen" Grid.Column="3" IsEnabled="False" VerticalAlignment="Center" Grid.Row="3" Margin="0,0,20,20">Betaald</CheckBox>
+                <Button Name="ButtonTruitjeAanpassenBijBestelling" IsEnabled="False" Grid.Column="4" Grid.Row="3" Width="120" Margin="0,0,0,20" Click="ButtonTruitjeToevoegenBijBestelling_Click">Truitje Toevoegen</Button>
+                <!--4de rij-->
+                <DataGrid AutoGenerateColumns="False" IsEnabled="False" Name="BestellingAanpassenResult" Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="4" Margin="0,0,0,10" SelectionChanged="BestellingToevoegenResult_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id"  Binding="{Binding Key.Id}"/>
+                        <DataGridTextColumn Header="Club" Width="*" Binding="{Binding Key.Club.Naam}"/>
+                        <DataGridTextColumn Header="Seizoen" Width="*" Binding="{Binding Key.Seizoen}"/>
+                        <DataGridTextColumn Header="Versie" Width="*" Binding="{Binding Key.ClubSet.Versie}"/>
+                        <DataGridCheckBoxColumn Header="Thuis truitje" Binding="{Binding Key.ClubSet.Thuis}"/>
+                        <DataGridTextColumn Header="Prijs/stuk" Binding="{Binding Key.Prijs}"/>
+                        <DataGridTextColumn Header="Aantal" Binding="{Binding Value}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!--5de rij-->
+                <Button Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="3" IsEnabled="False" >Bestelling aanpassen</Button>
+                <Button Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="1" IsEnabled="False" Margin="0,0,20,0" Padding="10,0,10,0" >Bestelling verwijderen</Button>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Klant toevoegen">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20px" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20px" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20px" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="25px" />
+                    <RowDefinition Height="20px" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="1" Grid.Column="1" Margin="0,0,10,20">Naam</Label>
+                <TextBox Name="TextBoxNaamKlantToevoegen" Grid.Row="1" Grid.Column="2" Margin="0,0,10,20"></TextBox>
+
+                <Label Grid.Row="2" Grid.Column="1" Margin="0,0,10,20">Adres</Label>
+                <TextBox Name="TextBoxAdresKlantToevoegen" Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Margin="0,0,10,20" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
+
+                <Button Name="ButtonKlantToevoegen" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Click="ButtonKlantToevoegen_Click">Voeg klant toe</Button>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Klant aanpassen">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20px" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20px" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20px" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="25px" />
+                    <RowDefinition Height="20px" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="1" Grid.Column="1" Margin="0,0,10,20">Klant Id</Label>
+                <TextBox Name="TextBoxKlantIdAanpassen" Grid.Row="1" Grid.Column="2" IsEnabled="False" Margin="0,0,10,20"></TextBox>
+                <Button Name="ButtonKlantSelecterenVoorAanpassen" Grid.Row="1" Width="120" Grid.Column="3" Margin="0,0,0,20" Click="ButtonKlantSelecterenVoorKlantAanpassen_Click">Klant selecteren</Button>
+
+                <Label Grid.Row="2" Grid.Column="1" Margin="0,0,10,20">Naam</Label>
+                <TextBox Name="TextBoxNaamAanpassenKlant" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,0,0,20">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxKlantIdAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <Label Grid.Row="3" Grid.Column="1" Margin="0,0,10,20">Adres</Label>
+                <TextBox Name="TextBoxAdresAanpassenKlant" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="0,0,0,20" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxKlantIdAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <Button Name="ButtonKlantAanpassen" Grid.Row="5"  Grid.Column="2" Grid.ColumnSpan="2" Click="ButtonKlantAanpassen_Click">
+                    Klant aanpassen
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxKlantIdAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Name="ButtonKlantVerwijderen" Grid.Row="5" Width="120" Grid.Column="1" Grid.ColumnSpan="1" Margin="0,0,20,0" Click="ButtonKlantVerwijderen_Click" >
+                    Klant verwjderen
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxKlantIdAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+            </Grid>
+        </TabItem>
+
+        <TabItem Name="TabItemTruitjeToevoegen" Header="Truitje Toevoegen" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+
+
+                <Label Grid.Column="1" Grid.Row="1" Margin="0,0,10,20">Competitie</Label>
+                <ComboBox  Name="ComboBoxCompetitieTruitjeToevoegen" Grid.Column="2" Grid.Row="1" Margin="0,0,10,20" SelectionChanged="ComboBoxCompetitieTruitjeToevoegen_SelectionChanged"></ComboBox>
+
+                <Label Grid.Column="3" Grid.Row="1" Margin="0,0,10,20">Club</Label>
+                <ComboBox Name="ComboBoxClubTruitjeToevoegen" Grid.Column="4" Grid.Row="1" Margin="0,0,0,20" SelectionChanged="ComboBoxClubTruitjeToevoegen_SelectionChanged"></ComboBox>
+
+                <Label Grid.Column="1" Grid.Row="2" Margin="0,0,10,20">Seizoen</Label>
+                <TextBox Name="TextBoxSeizoenTruitjeToevoegen" Grid.Column="2" Grid.Row="2" Margin="0,0,10,20"></TextBox>
+
+                <Label Grid.Column="3" Grid.Row="2" Margin="0,0,10,20">Prijs</Label>
+                <TextBox Name="TextBoxPrijsTruitjeToevoegen" Grid.Column="4" Grid.Row="2" Margin="0,0,10,20"></TextBox>
+
+
+                <Label  Grid.Column="1" Grid.Row="3"   Margin="0,0,10,20">Versie</Label>
+                <DockPanel   Grid.Column="2" Grid.Row="3">
+                    <RadioButton Name="RadioButtonThuisTruitjeToevoegen" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,30,20"  GroupName="UitThuis" >Thuis</RadioButton>
+                    <RadioButton Name="RadioButtonUitTruitjeToevoegen" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,10,20" GroupName="UitThuis" >Uit</RadioButton>
+                    <TextBox Name="TextBoxVersieTruitjeToevoegen" DockPanel.Dock="Top"   Margin="0,0,30,20"></TextBox>
+                </DockPanel>
+
+                <Label Grid.Column="3" Grid.Row="3" Margin="0,0,10,20">Maat</Label>
+                <ComboBox Name="ComboBoxMaatTruitjeToevoegen" Grid.Column="4" Grid.Row="3" Margin="0,0,0,20" SelectionChanged="ComboBoxClubTruitjeToevoegen_SelectionChanged"></ComboBox>
+
+                <Button Name="ButtonTruitjeToevoegen" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="4" Click="ButtonTruitjeToevoegen_Click" >Voeg Truitje toe</Button>
+
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="Truitje aanpassen">
+            <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Column="1" Grid.Row="1" Margin="0,0,10,20">Id</Label>
+            <TextBox Name="TextBoxIdTruitjeAanpassen" IsEnabled="False" Grid.Column="2" Grid.Row="1" Margin="0,0,10,20"></TextBox>
+                <Button Name="ButtonSelecteerTruitjeAanpassen" Grid.Column="4" Grid.Row="1" Margin="0,0,10,20" Click="ButtonSelecteerTruitjeAanpassen_Click"  >Truitje Selecteren</Button>
+                
+                <Label Grid.Column="1" Grid.Row="2" Margin="0,20,10,20">Competitie</Label>
+            <ComboBox  Name="ComboBoxCompetitieTruitjeAanpassen" Grid.Column="2" Grid.Row="2" Margin="0,20,10,20" SelectionChanged="ComboBoxCompetitieTruitjeAanpassen_SelectionChanged" >
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    </ComboBox.Style>
+            </ComboBox>
+
+            <Label Grid.Column="3" Grid.Row="2" Margin="0,20,10,20">Club</Label>
+                <ComboBox Name="ComboBoxClubTruitjeAanpassen" Grid.Column="4" Grid.Row="2" Margin="0,20,0,20" SelectionChanged="ComboBoxMaatTruitjeAanpassen_SelectionChanged" >
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+                </ComboBox>
+
+            <Label Grid.Column="1" Grid.Row="3" Margin="0,0,10,20">Seizoen</Label>
+            <TextBox Name="TextBoxSeizoenTruitjeAanpassen" Grid.Column="2" Grid.Row="3" Margin="0,0,10,20">
+                <TextBox.Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+                </TextBox>
+
+            <Label Grid.Column="3" Grid.Row="3" Margin="0,0,10,20">Prijs</Label>
+            <TextBox Name="TextBoxPrijsTruitjeAanpassen" Grid.Column="4" Grid.Row="3" Margin="0,0,10,20">
+                <TextBox.Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+                </TextBox>
+
+
+            <Label  Grid.Column="1" Grid.Row="4"   Margin="0,0,10,20">Versie</Label>
+            <DockPanel   Grid.Column="2" Grid.Row="4">
+                <RadioButton Name="RadioButtonThuisTruitjeAanpassen" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,30,20"  GroupName="UitThuis" >
+                    Thuis
+                    <RadioButton.Style>
+                        <Style TargetType="{x:Type RadioButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                        </RadioButton.Style>
+                </RadioButton>
+                <RadioButton Name="RadioButtonUitTruitjeAanpassen" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,10,20" GroupName="UitThuis" >
+                    Uit
+                    <RadioButton.Style>
+                        <Style TargetType="{x:Type RadioButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RadioButton.Style>
+                    </RadioButton>
+                <TextBox Name="TextBoxVersieTruitjeAanpassen" DockPanel.Dock="Top"   Margin="0,0,30,20">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                    </TextBox>
+            </DockPanel>
+
+            <Label Grid.Column="3" Grid.Row="4" Margin="0,0,10,20">Maat</Label>
+            <ComboBox Name="ComboBoxMaatTruitjeAanpassen" Grid.Column="4" Grid.Row="4" Margin="0,0,0,20" SelectionChanged="ComboBoxMaatTruitjeAanpassen_SelectionChanged" >
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+                </ComboBox>
+                <Button Name="ButtonTruitjeVerwijderenAanpassen" Width="120" Grid.Column="1" Grid.Row="6" Click="ButtonTruitjeVerwijderenAanpassen_Click"    >
+                    Truitje Verwijderen
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Name="ButtonTruitjeAanpassen" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="3" Margin="20,0,0,0" Click="ButtonTruitjeAanpassen_Click"  >
+                Truitje aanpassen
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxIdTruitjeAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    </Button.Style>
+            </Button>
+
+        </Grid>
+       
+
+        </TabItem>
+
+        <TabItem Header="Club Toevoegen">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20px" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20px" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20px" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="25px" />
+                    <RowDefinition Height="20px" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="1" Grid.Column="1" Margin="0,0,10,20">Naam</Label>
+                <TextBox Name="TextBoxNaamClubToevoegen" Grid.Row="1" Grid.Column="2" Margin="0,0,10,20"></TextBox>
+
+                <Label Grid.Row="2" Grid.Column="1" Margin="0,0,10,20">Competitie</Label>
+                <TextBox Name="TextBoxCompetitieClubToevoegen" Grid.Row="2" Grid.Column="2" Margin="0,0,10,20" ></TextBox>
+
+                <Button Name="ButtonClubToevoegen" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Click="ButtonClubToevoegen_Click" >Voeg Club toe</Button>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Club aanpassen">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20px" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20px" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20px" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="25px" />
+                    <RowDefinition Height="20px" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="1" Grid.Column="1" Margin="0,0,10,20">Club Id</Label>
+                <TextBox Name="TextBoxClubIdAanpassen" Grid.Row="1" Grid.Column="2" IsEnabled="False" Margin="0,0,10,20"></TextBox>
+                <Button Name="ButtonClubSelecterenVoorAanpassen" Grid.Row="1" Width="120" Grid.Column="3" Margin="0,0,0,20" Click="ButtonClubSelecterenVoorAanpassen_Click" >Club selecteren</Button>
+
+                <Label Grid.Row="2" Grid.Column="1" Margin="0,0,10,20">Naam</Label>
+                <TextBox Name="TextBoxNaamAanpassenClub" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,0,0,20">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxClubIdAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <Label Grid.Row="3" Grid.Column="1" Margin="0,0,10,20">Competitie</Label>
+                <TextBox Name="TextBoxCompetitieAanpassenClub" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="1" Margin="0,0,0,20" >
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxClubIdAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <Button Name="ButtonClubAanpassen" Grid.Row="5"  Grid.Column="2" Grid.ColumnSpan="2" Click="ButtonClubAanpassen_Click" >
+                    Club aanpassen
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxClubIdAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Name="ButtonClubVerwijderen" Grid.Row="5" Width="120" Grid.Column="1" Grid.ColumnSpan="1" Margin="0,0,20,0" Click="ButtonClubVerwijderen_Click"  >
+                    Club verwjderen
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=TextBoxClubIdAanpassen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+            </Grid>
+
+        </TabItem>
+       
+    </TabControl>
+
+    
 </Window>

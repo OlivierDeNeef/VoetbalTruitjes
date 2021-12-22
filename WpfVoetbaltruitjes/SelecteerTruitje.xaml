@@ -1,0 +1,90 @@
+﻿<Window x:Class="WpfVoetbaltruitjes.SelecteerTruitje"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfVoetbaltruitjes"
+        mc:Ignorable="d"
+        Title="SelecteerTruitje" Height="450" Width="860" MinWidth="860" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+
+        <Label Grid.Column="1" Grid.Row="1" Margin="0,0,10,20">Competitie</Label>
+        <ComboBox Name="ComboBoxCompetitie" Grid.Column="2" Grid.Row="1" Margin="0,0,10,20" SelectionChanged="ComboBoxCompetitie_SelectionChanged"></ComboBox>
+
+        <Label Grid.Column="3" Grid.Row="1" Margin="0,0,10,20">Club</Label>
+        <ComboBox Name="ComboBoxClub" Grid.Column="4" Grid.Row="1" Margin="0,0,0,20" SelectionChanged="ComboBoxClub_SelectionChanged"></ComboBox>
+
+        <Label Grid.Column="1" Grid.Row="2" Margin="0,0,10,20">Seizoen</Label>
+        <TextBox Name="TextBoxSeizoen" Grid.Column="2" Grid.Row="2" Margin="0,0,10,20"></TextBox>
+
+        <Label Grid.Column="3" Grid.Row="2" Margin="0,0,10,20">Prijs</Label>
+        <TextBox Name="TextBoxPrijs" Grid.Column="4" Grid.Row="2" Margin="0,0,10,20"></TextBox>
+
+        <Label Grid.Column="1" Grid.Row="3" Margin="0,0,10,20">Id</Label>
+        <TextBox Name="TextBoxId" Grid.Column="2" Grid.Row="3" Margin="0,0,10,20"></TextBox>
+        <StackPanel Grid.Column="4" Grid.Row="3" Grid.RowSpan="2">
+            <Button Name="ButtonZoeken"  Grid.RowSpan="1" Height="55"  Margin="0,0,0,5" Click="ButtonZoeken_Click">Zoek</Button>
+            <TextBlock HorizontalAlignment="Right"><Hyperlink Click="Hyperlink_Click">Clear all</Hyperlink></TextBlock>
+        </StackPanel>
+
+      
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1" Grid.Row="4">
+            <CheckBox Name="CheckBoxThuis" Margin="0,0,10,20" Checked="CheckBoxThuis_Checked">Thuis</CheckBox>
+            <CheckBox Name="CheckBoxUit" Margin="0,0,10,20" Checked="CheckBoxUit_Checked">Uit</CheckBox>
+        </StackPanel>
+
+        <DockPanel  VerticalAlignment="Center" Grid.Column="2" Grid.Row="4" Margin="0,0,10,0">
+            <Label DockPanel.Dock="Left"  Margin="0,0,10,20">Versie</Label>
+            <TextBox Name="TextBoxVersie" DockPanel.Dock="Left" Width="100" Margin="0,0,10,20"></TextBox>
+
+            <Label DockPanel.Dock="Left"  Margin="0,0,10,20">Maat</Label>
+            <ComboBox Name="ComboBoxMaat" DockPanel.Dock="Top"  Margin="0,0,0,20"></ComboBox>
+        </DockPanel>
+
+        <DataGrid AutoGenerateColumns="False" Name="ResultTruitjes"  Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="4" Margin="0,0,0,20">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Competitie" Binding="{Binding Club.Competitie}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Club" Binding="{Binding Club.Naam}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Seizoen" Binding="{Binding Seizoen}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Kledingmaat" Binding="{Binding Kledingmaat}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Versie" Binding="{Binding ClubSet.Versie}"></DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="Is thuis truitje" Binding="{Binding ClubSet.Thuis}"></DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="¨Prijs" Width="auto" Binding="{Binding Prijs}"></DataGridTextColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Label Grid.Column="1" Grid.Row="6"  >Aantal</Label>
+        <DockPanel  Grid.Column="2" Grid.Row="6" Margin="0,0,10,0">
+            <Button Name="ButtonAddOne" DockPanel.Dock="Right" Width="25" Click="ButtonAddOne_Click">+</Button>
+            <Button Name="ButtonSubOne" DockPanel.Dock="Right" Width="25" Click="ButtonSubOne_Click">-</Button>
+            <TextBox Name="TextBoxAantal" DockPanel.Dock="Top" IsEnabled="False" >1</TextBox>
+        </DockPanel>
+
+
+        <Button Name="ButtonTruitjeSelecteren" Grid.Column="4" Grid.Row="6" Grid.ColumnSpan="1" Click="ButtonTruitjeSelecteren_Click" >Voeg Truitje(s) toe</Button>
+
+    </Grid>
+</Window>

@@ -10,7 +10,8 @@ namespace Domain.Models
         public int KlantId { get; private set; }
         public string Naam { get; private set; }
         public string Adres { get; private set; }
-        private readonly List<Bestelling> _bestellingen = new();
+
+        private  List<Bestelling> _bestellingen = new();
 
 
         public Klant(int klantId, string naam, string adres, List<Bestelling> bestellingen) : this(klantId, naam, adres)
@@ -57,13 +58,20 @@ namespace Domain.Models
                 bestelling.VerwijderKlant();
             }
             
-            this._bestellingen.Remove(bestelling);
+            _bestellingen.Remove(bestelling);
 
         }
+
+        public void ZetBestelling(List<Bestelling> bestellingen)
+        {
+            if (bestellingen == null) throw new KlantException("Klant : ZetBestellingen - bestellingen is null");
+            _bestellingen = bestellingen;
+        }
+
         public void VoegToeBestelling(Bestelling bestelling)
         {
             if (bestelling == null) throw new KlantException("Klant : VoegToeBestelling - bestelling is null");
-            if (_bestellingen.Contains(bestelling)) throw new KlantException("Klant : AddBestelling - bestelling already exists");
+            if (HeeftBestelling(bestelling)) throw new KlantException("Klant : AddBestelling - bestelling already exists");
             _bestellingen.Add(bestelling);
             if (!Equals(bestelling.Klant, this)) bestelling.ZetKlant(this);
             
@@ -85,34 +93,42 @@ namespace Domain.Models
         public override string ToString()
         {
            
-            var res = $"[Klant] {KlantId},{Naam},{Adres},{_bestellingen.Count}";
-            foreach (var bestelling in _bestellingen)
-            {
-                res += $"{Environment.NewLine}{bestelling}";
-            }
-            return res;
+            return $"[Id] {KlantId}, [Naam] {Naam}, [Adres] {Adres}, [Aantal bestellingen] {_bestellingen.Count}";
+            
         }
-        public string ToText(bool kort = true)
-        {
-            if (kort) return $"[Klant] {KlantId},{Naam},{Adres},{_bestellingen.Count}";
-            var res = $"[Klant] {KlantId},{Naam},{Adres},{_bestellingen.Count}";
-            return _bestellingen.Aggregate(res, (current, bestelling) => current + $"{Environment.NewLine}{bestelling}");
-        }
+        
         public void Show()
         {
             Console.WriteLine(this);
             foreach (var bestelling in _bestellingen) Console.WriteLine($"bestelling:{bestelling}"); 
         }
 
+        protected bool Equals(Klant other)
+        {
+            return KlantId == other.KlantId && Naam == other.Naam && Adres == other.Adres;
+        }
+
         public override bool Equals(object obj)
         {
-            return obj is Klant klant &&
-                   Naam == klant.Naam &&
-                   Adres == klant.Adres;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof(Klant)) return false;
+            return Equals((Klant) obj);
         }
+
         public override int GetHashCode()
         {
-            return HashCode.Combine(Naam, Adres);
+            return HashCode.Combine(KlantId, Naam, Adres);
+        }
+
+        public static bool operator ==(Klant left, Klant right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Klant left, Klant right)
+        {
+            return !Equals(left, right);
         }
     }
 }
